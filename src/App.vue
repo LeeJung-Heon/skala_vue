@@ -4,10 +4,20 @@ import AxiosWeather from './components/practices/library/AxiosWeather.vue'
 import AxiosJson from './components/practices/library/AxiosJson.vue'
 import ElementPlus from './components/practices/library/ElementPlus.vue'
 import EcmaScript from './components/practices/library/EcmaScript.vue'
+
+
+import VueBind from './components/practices/basic/VueBind.vue'
+import VueBindClass from './components/practices/basic/VueBindClass.vue'
+import VueIf from './components/practices/basic/VueIf.vue'
 </script>
 
 <template>
   <div class="practice-container">
+
+    <VueBind />
+    <VueBindClass />
+    <VueIf />
+
     <h1>1. Store</h1>
     <hr />
     <StoreCounter />
