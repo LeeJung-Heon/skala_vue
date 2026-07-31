@@ -1,40 +1,88 @@
 <script setup>
-import StoreCounter from './components/practices/library/StoreCounter.vue'
-import AxiosWeather from './components/practices/library/AxiosWeather.vue'
-import AxiosJson from './components/practices/library/AxiosJson.vue'
-import ElementPlus from './components/practices/library/ElementPlus.vue'
-import EcmaScript from './components/practices/library/EcmaScript.vue'
-
-
-import VueBind from './components/practices/basic/VueBind.vue'
-import VueBindClass from './components/practices/basic/VueBindClass.vue'
-import VueIf from './components/practices/basic/VueIf.vue'
+import AppNavbar from '@/components/layout/AppNavbar.vue'
 </script>
 
 <template>
-  <div class="practice-container">
+  <div class="app-shell">
+    <AppNavbar />
 
-    <VueBind />
-    <VueBindClass />
-    <VueIf />
+    <main class="app-main">
+      <RouterView v-slot="{ Component, route }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" :key="route.path" />
+        </transition>
+      </RouterView>
+    </main>
 
-    <h1>1. Store</h1>
-    <hr />
-    <StoreCounter />
-    <h1>2. Axios</h1>
-    <hr />
-    <AxiosWeather />
-    <AxiosJson />
-    <h1>3. Element Plus</h1>
-    <hr />
-    <ElementPlus />
-    <h1>4. Modern JavaScript</h1>
-    <hr />
-    <EcmaScript />
+    <footer class="app-footer">
+      <div class="footer-inner">
+        <span class="footer-brand">SKALA-VUE</span>
+        <span class="footer-note">모던 웹 애플리케이션 개발 실습실 · Vue 3 + Vite</span>
+      </div>
+    </footer>
   </div>
 </template>
 
-<style>
-/* ⚠️ 외부 스타일 파일(예: 버튼 디자인 뭉치)을 이 방 안으로 쏙 가리켜 가져옵니다 */
-@import '@/assets/practice.css';
+<style scoped>
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--skala-page-bg);
+}
+
+.app-main {
+  flex: 1;
+}
+
+.app-footer {
+  border-top: 1px solid var(--skala-border);
+  background: var(--skala-surface);
+}
+
+.footer-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 22px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.footer-brand {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--skala-slate);
+}
+
+.footer-note {
+  font-size: 12.5px;
+  color: var(--skala-text-muted);
+}
+
+/* 페이지 전환 효과 */
+.fade-enter-active,
+.fade-leave-active {
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: none;
+  }
+}
 </style>

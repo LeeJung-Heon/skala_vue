@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const goHome = () => {
-  router.push({ name: 'WeatherHome' })
+  router.push({ name: 'Landing' })
 }
 </script>
 
@@ -19,7 +19,7 @@ const goHome = () => {
       <p>요청하신 주소가 존재하지 않거나,<br />아직 개발되지 않았습니다.</p>
 
       <!-- 포인트 컬러가 적용된 버튼 -->
-      <button class="home-button" @click="goHome">날씨 메인으로 이동</button>
+      <button class="home-button" @click="goHome">학습 홈으로 이동</button>
     </div>
   </div>
 </template>
@@ -31,8 +31,9 @@ const goHome = () => {
   justify-content: center;
   align-items: center;
   /* 부모 요소(예: App.vue)에서 남은 높이를 다 쓰도록 설정 */
-  min-height: 80vh;
-  background-color: #f8f9fa; /* 아주 연한 회색 배경 */
+  min-height: 70vh;
+  padding: 40px 20px;
+  background-color: transparent; /* 앱 셸의 배경을 그대로 사용 */
   font-family: 'Noto Sans KR', sans-serif; /* 기본 폰트 설정 (옵션) */
 }
 
@@ -66,7 +67,7 @@ p {
 }
 
 .home-button {
-  background-color: #007bff; /* 날씨 앱 포인트 컬러 (파란색) */
+  background-color: var(--skala-green); /* 앱 포인트 컬러 */
   color: white;
   border: none;
   padding: 12px 30px;
@@ -81,7 +82,7 @@ p {
 
 /* Hover 및 Active 효과 */
 .home-button:hover {
-  background-color: #0056b3; /* 조금 짙은 파란색 */
+  background-color: var(--skala-green-dark); /* 조금 짙은 톤 */
 }
 
 .home-button:active {

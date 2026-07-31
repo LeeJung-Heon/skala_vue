@@ -1,19 +1,23 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import PracticePage from '@/components/layout/PracticePage.vue'
 
 const router = useRouter()
 
 const handleGoHome = () => {
-  router.push('/')
+  router.push({ name: 'WeatherHome' })
 }
 </script>
 
 <template>
-  <div>
-    <h3>ℹ️ 서비스 소개</h3>
-    <hr />
+  <PracticePage
+    title="앱 소개"
+    description="날씨 대시보드 실습 앱이 어떤 기술로 구성되어 있는지 정리한 페이지입니다."
+  >
+    <div class="practice-section">
+      <h2>ℹ️ 서비스 소개</h2>
 
-    <div class="description-box">
+      <div class="description-box">
       <p>본 앱은 <strong>Vue 3</strong> 및 <strong>Vue Router 4</strong> 기반 제작된 실습용 기상 관측 대시보드 시스템입니다.</p>
       <ul>
         <li><code>components/exercise/</code> 폴더 내부의 독립 부품 연동</li>
@@ -22,8 +26,9 @@ const handleGoHome = () => {
       </ul>
     </div>
 
-    <button @click="handleGoHome" class="home-btn">대시보드 홈으로 이동</button>
-  </div>
+      <button @click="handleGoHome" class="home-btn">대시보드 홈으로 이동</button>
+    </div>
+  </PracticePage>
 </template>
 
 <style scoped>

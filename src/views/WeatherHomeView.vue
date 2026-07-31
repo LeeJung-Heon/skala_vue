@@ -2,6 +2,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
+import PracticePage from '@/components/layout/PracticePage.vue'
 import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 import SearchBar from '../components/exercise/SearchBar.vue'
 import WeatherCard from '../components/exercise/WeatherCard.vue'
@@ -46,7 +47,10 @@ const handleDetailJump = (id) => {
 </script>
 
 <template>
-  <div class="dashboard-wrapper">
+  <PracticePage
+    title="Weather 대시보드"
+    description="라우터 · 컴포넌트 분리 · 쿼리 스트링 동기화를 한데 모은 종합 실습 앱입니다. 도시를 검색하거나 카드를 눌러 상세 페이지로 이동해 보세요."
+  >
     <BaseDashboardCard>
       <SearchBar :current-query="searchQuery" @update-query="(val) => (searchQuery = val)" />
     </BaseDashboardCard>
@@ -56,7 +60,7 @@ const handleDetailJump = (id) => {
       <WeatherCard v-for="item in filteredWeatherList" :key="item.id" :city-item="item" @select-card="(msg) => (selectedCityInfo = msg)" @click-detail="handleDetailJump(item.id)" />
     </BaseDashboardCard>
     <div class="status-bar">{{ selectedCityInfo }}</div>
-  </div>
+  </PracticePage>
 </template>
 
 <style scoped>
