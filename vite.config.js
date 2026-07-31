@@ -4,8 +4,12 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
+const isGitHubActions = process.env.GITHUB_ACTIONS === 'true'
+const base = isGitHubActions ? '/skala_vue/' : '/'
+
 // https://vite.dev/config/
 export default defineConfig({
+  base,
   plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {
