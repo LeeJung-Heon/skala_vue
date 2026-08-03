@@ -63,13 +63,4 @@ const handleDetailJump = (id) => {
   </PracticePage>
 </template>
 
-<style scoped>
-.status-bar {
-  background: #e8f5e9;
-  padding: 10px;
-  text-align: center;
-  color: #2e7d32;
-  font-weight: bold;
-  border-radius: 6px;
-}
-</style>
+<!-- .status-bar 스타일은 assets/exercise.css 에서 토큰 기반으로 공통 관리합니다. -->

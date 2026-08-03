@@ -120,20 +120,21 @@ onMounted(() => {
 input {
   flex: 1;
   padding: 8px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  border: 1px solid var(--skala-border-strong);
+  border-radius: var(--skala-radius-sm);
 }
 button {
   padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
+  border: 1px solid transparent;
+  border-radius: var(--skala-radius-sm);
+  font-weight: 600;
   cursor: pointer;
   font-size: 13px;
+  color: #ffffff;
 }
+/* CRUD 동작별 색 구분 — 생성/수정/삭제를 한눈에 */
 .btn-post {
-  background: #22c55e;
-  color: white;
+  background: var(--skala-success);
 }
 .item-list {
   list-style: none;
@@ -147,10 +148,10 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  padding: 12px 14px;
+  background: var(--skala-surface-muted);
+  border: 1px solid var(--skala-border);
+  border-radius: var(--skala-radius);
 }
 .content {
   display: flex;
@@ -160,28 +161,28 @@ button {
 }
 .id-tag {
   font-size: 11px;
-  font-weight: bold;
-  color: #64748b;
+  font-weight: 700;
+  color: var(--skala-text-muted);
 }
 .title-text {
   margin: 0;
   font-size: 14px;
-  color: #334155;
+  color: var(--skala-slate-ink);
   text-transform: capitalize;
 }
 .btn-group {
   display: flex;
-  gap: 4px;
+  gap: 6px;
 }
 .btn-put {
-  background: #eab308;
-  color: white;
+  background: var(--skala-warn);
 }
 .btn-delete {
-  background: #ef4444;
-  color: white;
+  background: var(--skala-danger);
 }
-button:hover {
-  opacity: 0.9;
+button:not(:disabled):hover {
+  filter: brightness(0.94);
+  color: #ffffff;
+  border-color: transparent;
 }
 </style>

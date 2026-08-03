@@ -21,17 +21,10 @@ watch(currentCity, (newValue, oldValue) => {
     <button @click="currentCity = '서울'">서울 선택</button> &nbsp; <button @click="currentCity = '수원'">수원 선택</button> &nbsp;
     <button @click="currentCity = '부산'">부산 선택</button>
 
-    <div class="monitor">
+    <div class="monitor tone-info">
       <h3>👁️‍🗨️ 파수꾼(watch) 모니터링 시스템</h3>
       <p>{{ logMessage }}</p>
-      <small style="color: gray">(버튼을 누른 후 브라우저 콘솔창 F12를 확인해 보세요)</small>
+      <small class="hint">(버튼을 누른 후 브라우저 콘솔창 F12를 확인해 보세요)</small>
     </div>
   </div>
 </template>
-
-<style scoped>
-.monitor {
-  border-color: #0984e3;
-  background: #e3fafc;
-}
-</style>

@@ -29,10 +29,11 @@ const sendNotification = () => {
 </template>
 
 <style scoped>
+/* 자식 영역: 점선 테두리 + 다른 색으로 "안쪽"임을 대비시킴 */
 .child-container {
-  border: 2px dashed #3498db;
+  border: 2px dashed var(--skala-info);
   padding: 20px;
-  background-color: #fff;
-  border-radius: 6px;
+  background-color: var(--skala-surface);
+  border-radius: var(--skala-radius-sm);
 }
 </style>

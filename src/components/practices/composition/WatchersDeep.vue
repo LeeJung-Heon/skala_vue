@@ -38,12 +38,12 @@ watch(
     <button @click="user.name = '이순신'">이름만 변경</button> &nbsp;
     <button @click="user.age++">나이만 변경 (age++)</button>
 
-    <div class="monitor">
+    <div class="monitor tone-info">
       <p>👁️‍🗨️ 1) deep: true 모니터 (전체 감시)</p>
       <p>{{ logDeep }}</p>
     </div>
 
-    <div class="monitor target">
+    <div class="monitor tone-violet">
       <p>🎯 2) 화살표 함수 모니터 (나이만 타겟 감시)</p>
       <p>{{ logTarget }}</p>
     </div>
@@ -51,13 +51,8 @@ watch(
 </template>
 
 <style scoped>
-.monitor {
-  border-color: #0984e3;
-  background: #e3fafc;
-  font-weight: bold;
-}
-.target {
-  border-color: #6c5ce7;
-  background: #efe5ff;
+/* 첫 줄(감시 방식 라벨)만 강조 — 색상은 tone-* 유틸이 담당합니다 */
+.monitor > p:first-child {
+  font-weight: 700;
 }
 </style>

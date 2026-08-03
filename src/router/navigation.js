@@ -1,7 +1,7 @@
 /**
  * 학습 페이지 카탈로그 (Single Source of Truth)
- * - 네비게이션 바(AppNavbar)와 랜딩 페이지(LandingView)가 동일한 데이터를 공유합니다.
- * - 여기에 항목을 추가하면 상단 메뉴와 홈 카드에 자동으로 반영됩니다.
+ * - 사이드바(AppSidebar)와 랜딩 페이지(LandingView)가 동일한 데이터를 공유합니다.
+ * - 여기에 항목을 추가하면 사이드바 목차와 홈 칩 목록에 자동으로 반영됩니다.
  */
 export const navSections = [
   {

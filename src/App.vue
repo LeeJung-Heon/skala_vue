@@ -1,34 +1,41 @@
 <script setup>
-import AppNavbar from '@/components/layout/AppNavbar.vue'
+import AppSidebar from '@/components/layout/AppSidebar.vue'
 </script>
 
 <template>
   <div class="app-shell">
-    <AppNavbar />
+    <AppSidebar />
 
-    <main class="app-main">
-      <RouterView v-slot="{ Component, route }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" :key="route.path" />
-        </transition>
-      </RouterView>
-    </main>
+    <div class="app-body">
+      <main class="app-main">
+        <RouterView v-slot="{ Component, route }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" :key="route.path" />
+          </transition>
+        </RouterView>
+      </main>
 
-    <footer class="app-footer">
-      <div class="footer-inner">
+      <footer class="app-footer">
         <span class="footer-brand">SKALA-VUE</span>
         <span class="footer-note">모던 웹 애플리케이션 개발 실습실 · Vue 3 + Vite</span>
-      </div>
-    </footer>
+      </footer>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .app-shell {
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
   background: var(--skala-page-bg);
+  color: var(--skala-ink);
+}
+
+.app-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-main {
@@ -36,30 +43,25 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 }
 
 .app-footer {
+  margin-top: auto;
+  padding: 24px 72px;
   border-top: 1px solid var(--skala-border);
-  background: var(--skala-surface);
-}
-
-.footer-inner {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 22px 20px;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 10px;
+  gap: 12px;
 }
 
 .footer-brand {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: var(--skala-slate);
+  color: var(--skala-ink);
 }
 
 .footer-note {
-  font-size: 12.5px;
-  color: var(--skala-text-muted);
+  font-size: 12px;
+  color: var(--skala-ink-muted);
 }
 
 /* 페이지 전환 효과 */
@@ -77,6 +79,16 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 
 .fade-leave-to {
   opacity: 0;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .app-footer {
+    padding: 20px 16px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -18,9 +18,11 @@ import SlotScopedChild from './SlotScopedChild.vue'
 
 <style scoped>
 .display-panel {
-  background-color: #fdf2e9;
-  padding: 12px;
-  border-radius: 6px;
+  background-color: var(--skala-warn-soft);
+  border: 1px solid var(--skala-warn);
+  color: var(--skala-warn-ink);
+  padding: 12px 14px;
+  border-radius: var(--skala-radius-sm);
   margin-bottom: 10px;
 }
 </style>

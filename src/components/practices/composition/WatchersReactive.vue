@@ -33,32 +33,23 @@ watch(
     <p>상품명: {{ state.productName }} / 가격: {{ state.price }}원</p>
     <button @click="state.price += 500">가격 500원 인상</button>
 
-    <div class="monitor auto">
+    <div class="monitor tone-danger">
       <p>👁️‍🗨️ 1) state 변수 통째로 감시 (deep 자동화)</p>
       <p>{{ logAutoDeep }}</p>
-      <small>※ 주의: 이전 값과 현재 값이 똑같이 찍힌다.</small>
+      <small class="hint">※ 주의: 이전 값과 현재 값이 똑같이 찍힌다.</small>
     </div>
 
-    <div class="monitor target">
+    <div class="monitor tone-success">
       <p>🎯 2) () => state.price 콕 집어 감시 (과거 추적)</p>
       <p>{{ logTarget }}</p>
-      <small>※ 성공: 과거의 원본 가격이 칼같이 보존된다.</small>
+      <small class="hint">※ 성공: 과거의 원본 가격이 칼같이 보존된다.</small>
     </div>
   </div>
 </template>
 
 <style scoped>
-.monitor {
-  font-weight: bold;
-}
-.auto {
-  border-color: #ff7675;
-  background: #fff5f5;
-  color: #c0392b;
-}
-.target {
-  border-color: #00b894;
-  background: #e8f5e9;
-  color: #27ae60;
+/* 첫 줄(감시 방식 라벨)만 강조 — 색상은 tone-* 유틸이 담당합니다 */
+.monitor > p:first-child {
+  font-weight: 700;
 }
 </style>

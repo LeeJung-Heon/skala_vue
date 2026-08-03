@@ -32,16 +32,9 @@ watch([city, dateType], ([newCity, newDate], [oldCity, oldDate]) => {
     <label><input type="radio" value="오늘" v-model="dateType" /> 오늘</label> &nbsp; <label><input type="radio" value="내일" v-model="dateType" /> 내일</label> &nbsp;
     <label><input type="radio" value="주간예보" v-model="dateType" /> 주간예보</label>
 
-    <div class="monitor">
+    <div class="monitor tone-success">
       <h3>통합 모니터링 로그</h3>
       <p>현재 상태: {{ apiStatus }}</p>
     </div>
   </div>
 </template>
-
-<style scoped>
-.monitor {
-  border-color: #00b894;
-  background: #e8f5e9;
-}
-</style>

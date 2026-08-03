@@ -33,32 +33,16 @@ watch(
     <button @click="cityList.push('부산')">부산 추가 (push)</button> &nbsp;
     <button @click="cityList.pop()">최근 도시 삭제 (pop)</button>
 
-    <div class="monitor auto">
+    <div class="monitor tone-danger">
       <h3>👁️‍🗨️ 1) cityList 변수명 쌩으로 감시</h3>
       <p>{{ logAuto }}</p>
-      <small>※ 주의: 이전 배열과 현재 배열의 내용물/길이가 똑같이 동기화되어 버립니다.</small>
+      <small class="hint">※ 주의: 이전 배열과 현재 배열의 내용물/길이가 똑같이 동기화되어 버립니다.</small>
     </div>
 
-    <div class="monitor target">
+    <div class="monitor tone-success">
       <h3>🎯 2) () => [...cityList] 복사본 감시</h3>
       <p>{{ logCopy }}</p>
-      <small>※ 성공: 과거 배열에 들어있던 내용물이 지워지지 않고 정상 대조됩니다.</small>
+      <small class="hint">※ 성공: 과거 배열에 들어있던 내용물이 지워지지 않고 정상 대조됩니다.</small>
     </div>
   </div>
 </template>
-
-<style scoped>
-.monitor {
-  font-weight: bold;
-}
-.auto {
-  border-color: #ff7675;
-  background: #fff5f5;
-  color: #c0392b;
-}
-.target {
-  border-color: #00b894;
-  background: #e8f5e9;
-  color: #27ae60;
-}
-</style>

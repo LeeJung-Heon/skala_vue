@@ -32,18 +32,18 @@ const goHome = () => {
   align-items: center;
   /* 부모 요소(예: App.vue)에서 남은 높이를 다 쓰도록 설정 */
   min-height: 70vh;
-  padding: 40px 20px;
+  padding: 40px var(--skala-gutter);
   background-color: transparent; /* 앱 셸의 배경을 그대로 사용 */
-  font-family: 'Noto Sans KR', sans-serif; /* 기본 폰트 설정 (옵션) */
+  font-family: var(--skala-font-sans);
 }
 
 .not-found-content {
   text-align: center;
-  background-color: #ffffff;
+  background-color: var(--skala-surface);
   padding: 50px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
-  border: 1px solid #e9ecef;
+  border-radius: var(--skala-radius-lg);
+  box-shadow: var(--skala-shadow-md); /* 은은한 그림자 */
+  border: 1px solid var(--skala-border);
 }
 
 .error-icon {
@@ -54,21 +54,23 @@ const goHome = () => {
 h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: #343a40; /* 짙은 회색 */
+  color: var(--skala-ink);
   margin-bottom: 15px;
   letter-spacing: -0.5px;
+  border: none;
+  padding: 0;
 }
 
 p {
   font-size: 1.1rem;
-  color: #6c757d; /* 중간 회색 */
+  color: var(--skala-ink-muted);
   line-height: 1.6;
   margin-bottom: 35px;
 }
 
 .home-button {
-  background-color: var(--skala-green); /* 앱 포인트 컬러 */
-  color: white;
+  background-color: var(--skala-ink); /* 랜딩의 primary CTA 와 동일한 처리 */
+  color: #f4f5f8;
   border: none;
   padding: 12px 30px;
   font-size: 1.1rem;
@@ -81,8 +83,9 @@ p {
 }
 
 /* Hover 및 Active 효과 */
-.home-button:hover {
-  background-color: var(--skala-green-dark); /* 조금 짙은 톤 */
+.home-button:not(:disabled):hover {
+  background-color: var(--skala-accent);
+  color: #f4f5f8;
 }
 
 .home-button:active {

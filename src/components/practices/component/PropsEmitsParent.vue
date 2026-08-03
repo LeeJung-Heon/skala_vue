@@ -27,11 +27,12 @@ const handleUpdateRequest = (newValue) => {
 </template>
 
 <style scoped>
+/* 부모 영역: 실선 테두리 + 포인트 컬러로 "바깥쪽"임을 표시 */
 .parent-container {
-  border: 2px solid #2ecc71;
+  border: 2px solid var(--skala-green);
   padding: 20px;
-  background-color: #f8f9fa;
+  background-color: var(--skala-surface-muted);
   margin: 0 auto;
-  border-radius: 8px;
+  border-radius: var(--skala-radius);
 }
 </style>

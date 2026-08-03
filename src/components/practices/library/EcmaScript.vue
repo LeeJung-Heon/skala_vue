@@ -92,31 +92,34 @@ const runTask3 = async () => {
 
 <style scoped>
 .card {
-  background: #f9f9f9;
+  background: var(--skala-surface-muted);
   padding: 20px;
-  border-radius: 8px;
+  border-radius: var(--skala-radius);
   margin-bottom: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--skala-border);
 }
 button {
-  background: #409eff;
-  color: white;
-  border: none;
+  background: var(--skala-green);
+  color: #ffffff;
+  border: 1px solid var(--skala-green);
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: var(--skala-radius-sm);
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
 }
-button:hover {
-  background: #66b1ff;
+button:not(:disabled):hover {
+  background: var(--skala-green-dark);
+  border-color: var(--skala-green-dark);
+  color: #ffffff;
 }
+/* 실행 결과를 콘솔처럼 보여주는 영역 (딥 슬레이트 + 포인트 그린) */
 .console {
-  background: #2d2d2d;
-  color: #67c23a;
-  padding: 12px;
-  border-radius: 6px;
+  background: var(--skala-slate-ink);
+  color: var(--skala-green);
+  padding: 12px 14px;
+  border-radius: var(--skala-radius-sm);
   margin-top: 12px;
-  font-family: monospace;
-  font-size: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13.5px;
 }
 </style>

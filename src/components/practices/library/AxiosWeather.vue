@@ -56,13 +56,13 @@ const handleFetchWeather = async () => {
 
 <style scoped>
 .result-card {
-  background: #f8fafc;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  background: var(--skala-surface-muted);
+  padding: 15px 16px;
+  border-radius: var(--skala-radius);
+  border: 1px solid var(--skala-border);
   line-height: 1.8;
 }
 .result-card strong {
-  color: #0284c7;
+  color: var(--skala-green-dark);
 }
 </style>

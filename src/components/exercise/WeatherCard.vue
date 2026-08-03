@@ -9,6 +9,10 @@ defineProps({
 
 // 2. 상위로 송신할 두 가지 경로의 커스텀 이벤트 식별자 등록 (매크로)
 const emit = defineEmits(['select-card', 'click-detail'])
+
+// 스타일 메모: .weather-card / .badge / .hot / .cool / .btn-detail 의 시각 표현은
+// assets/exercise.css 에서 디자인 토큰 기반으로 공통 관리합니다.
+// (WeatherMockup · WeatherComposition 의 인라인 카드와 모양을 일치시키기 위함)
 </script>
 
 <template>
@@ -22,35 +26,3 @@ const emit = defineEmits(['select-card', 'click-detail'])
     <button class="btn-detail" @click.stop="emit('click-detail', cityItem.name, cityItem.status)">상세보기</button>
   </div>
 </template>
-
-<style scoped>
-.weather-card {
-  background: #fff;
-  border: 1px solid #dee2e6;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-}
-.badge {
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 4px;
-  color: #fff;
-}
-.hot {
-  background-color: #ff7675;
-}
-.cool {
-  background-color: #74b9ff;
-}
-.btn-detail {
-  position: absolute;
-  right: 12px;
-  top: 15px;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-</style>

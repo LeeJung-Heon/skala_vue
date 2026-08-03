@@ -45,7 +45,7 @@ const showDetail = (cityName, status) => {
 
       <WeatherCard v-for="item in filteredWeatherList" :key="item.id" :city-item="item" @select-card="(msg) => (selectedCityInfo = msg)" @click-detail="showDetail" />
 
-      <p v-if="filteredWeatherList.length === 0" style="text-align: center; color: #e74c3c; padding: 10px 0">😭 검색 결과와 일치하는 도시가 없습니다.</p>
+      <p v-if="filteredWeatherList.length === 0" class="empty-result">😭 검색 결과와 일치하는 도시가 없습니다.</p>
     </BaseDashboardCard>
 
     <div class="status-bar">
@@ -53,10 +53,3 @@ const showDetail = (cityName, status) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.dashboard-wrapper {
-  width: 600px;
-  margin: 0 auto;
-}
-</style>

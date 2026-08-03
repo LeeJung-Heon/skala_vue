@@ -46,12 +46,13 @@ watch(
 <style scoped>
 .log {
   margin-top: 10px;
-  font-weight: bold;
+  font-weight: 700;
 }
+/* 문자열 배열 / 객체 배열의 로그를 색으로 구분 */
 .text {
-  color: #0984e3;
+  color: var(--skala-info-ink);
 }
 .object {
-  color: #6c5ce7;
+  color: var(--skala-violet-ink);
 }
 </style>

@@ -125,12 +125,12 @@ const startDownload = () => {
 
 <style scoped>
 .subtitle {
-  color: #909399;
+  color: var(--skala-text-muted);
   margin-bottom: 30px;
 }
 .box-card {
   margin-bottom: 25px;
-  border-radius: 8px;
+  border-radius: var(--skala-radius);
 }
 .card-body {
   display: flex;
@@ -144,13 +144,14 @@ const startDownload = () => {
   font-size: 14px;
 }
 .hint-text {
-  color: #909399;
+  color: var(--skala-text-muted);
   font-size: 12px;
 }
 .result-preview {
-  background: #f4f4f5;
-  padding: 10px;
-  border-radius: 6px;
+  background: var(--skala-surface-muted);
+  border: 1px solid var(--skala-border);
+  padding: 10px 12px;
+  border-radius: var(--skala-radius-sm);
   font-size: 14px;
 }
 .btn-zone {

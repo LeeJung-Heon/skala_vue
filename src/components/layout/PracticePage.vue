@@ -69,10 +69,11 @@ const next = computed(() =>
 </template>
 
 <style scoped>
+/* 사이드바 셸 안에서 랜딩(.hero / .catalog)과 같은 좌우 여백을 쓰도록 맞춥니다.
+   읽기 폭은 max-width 로 제한하되 좌측 정렬을 유지해 사이드바와 흐름을 잇습니다. */
 .page {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 28px 20px 64px;
+  max-width: 1040px;
+  padding: 48px var(--skala-gutter) 72px;
 }
 
 /* ---------- 페이지 헤더 ---------- */
@@ -193,7 +194,7 @@ const next = computed(() =>
 
 @media (max-width: 640px) {
   .page {
-    padding: 20px 14px 48px;
+    padding: 28px var(--skala-gutter) 48px;
   }
 
   .page-title {

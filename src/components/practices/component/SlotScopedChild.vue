@@ -17,11 +17,11 @@ const userCount = ref(150)
 
 <style scoped>
 .base-card {
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 10px;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--skala-border);
+  border-radius: var(--skala-radius);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  background: var(--skala-surface);
+  box-shadow: var(--skala-shadow-sm);
 }
 </style>
