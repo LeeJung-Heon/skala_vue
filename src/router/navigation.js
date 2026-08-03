@@ -139,6 +139,12 @@ export const navSections = [
     summary: '배운 내용을 모아 만든 날씨 대시보드 미니 애플리케이션입니다.',
     items: [
       {
+        name: 'ExerciseTasks',
+        path: '/exercise/tasks',
+        label: '실습 과제 목록',
+        desc: '강의 자료의 [실습] 과제 요구사항 체크리스트',
+      },
+      {
         name: 'WeatherHome',
         path: '/weather',
         label: 'Weather 대시보드',

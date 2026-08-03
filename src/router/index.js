@@ -115,6 +115,12 @@ const routes = [
 
   /* ---------- 실습 앱 ---------- */
   {
+    path: '/exercise/tasks',
+    name: 'ExerciseTasks',
+    component: () => import('@/views/practice/ExerciseTasksView.vue'),
+    meta: { title: '실습 과제 목록' },
+  },
+  {
     path: '/exercise/steps',
     name: 'ExerciseSteps',
     component: () => import('@/views/practice/ExerciseStepsView.vue'),
