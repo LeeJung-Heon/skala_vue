@@ -179,7 +179,8 @@ const onSelectSuggestion = (item) => {
   min-width: 0;
   height: 100%;
   padding: 0;
-  font-size: 14px;
+  /* iOS는 16px 미만 input 포커스 시 자동 확대하므로 이 값을 유지합니다 */
+  font-size: 16px;
   font-family: inherit;
   color: var(--w-text);
   background: transparent;

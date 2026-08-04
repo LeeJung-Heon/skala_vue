@@ -73,6 +73,9 @@ const config = useConfigStore()
   --w-accent: #8fd0ff;
   --w-warm: #ffc27a;
   --w-radius: 20px;
+  --w-pad-x: clamp(16px, 4vw, 28px);
+  --w-pad-y: clamp(20px, 3.5vw, 34px);
+  --w-bar-pad-y: clamp(12px, 2vw, 18px);
 
   /* 날씨 아이콘 색 — WeatherIcon / weather-icons.css 가 참조합니다 */
   --w-icon-sun: #ffc27a;
@@ -84,7 +87,7 @@ const config = useConfigStore()
 
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100%;
   color: var(--w-text);
   background:
     radial-gradient(1000px 520px at 12% -12%, rgba(96, 165, 250, 0.24), transparent 62%),
@@ -94,12 +97,16 @@ const config = useConfigStore()
 }
 
 .app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   align-items: center;
   gap: 18px;
-  padding: 18px 28px;
+  padding: var(--w-bar-pad-y) var(--w-pad-x);
   border-bottom: 1px solid var(--w-border);
-  backdrop-filter: blur(6px);
+  background: rgba(13, 16, 23, 0.88);
+  backdrop-filter: blur(12px);
 }
 
 .wordmark {
@@ -107,6 +114,7 @@ const config = useConfigStore()
   align-items: baseline;
   gap: 6px;
   text-decoration: none;
+  min-width: 0;
 }
 
 .wordmark-name {
@@ -128,6 +136,7 @@ const config = useConfigStore()
   display: flex;
   gap: 6px;
   margin-left: 12px;
+  min-width: 0;
 }
 
 .nav-pill {
@@ -157,6 +166,7 @@ const config = useConfigStore()
   align-items: center;
   gap: 12px;
   margin-left: auto;
+  flex: 0 0 auto;
 }
 
 .unit-switch {
@@ -169,6 +179,7 @@ const config = useConfigStore()
 
 .unit-btn {
   min-width: 38px;
+  min-height: 32px;
   padding: 5px 10px;
   font-size: 12.5px;
   font-weight: 700;
@@ -196,7 +207,7 @@ const config = useConfigStore()
   flex: 1;
   width: min(940px, 100%);
   margin: 0 auto;
-  padding: 34px 28px 48px;
+  padding: var(--w-pad-y) var(--w-pad-x) calc(var(--w-pad-y) + 14px);
   box-sizing: border-box;
 }
 
@@ -215,7 +226,7 @@ const config = useConfigStore()
 
 .app-title {
   margin: 0;
-  font-size: 30px;
+  font-size: clamp(24px, 5vw, 30px);
   font-weight: 800;
   letter-spacing: -0.035em;
   color: var(--w-text);
@@ -229,27 +240,55 @@ const config = useConfigStore()
   color: var(--w-muted);
 }
 
+/* 태블릿·좁은 데스크톱 */
 @media (max-width: 900px) {
-  .weather-app {
-    min-height: 100vh;
-  }
-
   .app-bar {
-    flex-wrap: wrap;
     gap: 12px;
-    padding: 14px 18px;
   }
 
   .app-nav {
-    margin-left: 0;
+    margin-left: 4px;
   }
 
-  .app-body {
-    padding: 24px 18px 40px;
+  .nav-pill {
+    padding: 7px 12px;
+  }
+}
+
+/* 모바일 */
+@media (max-width: 720px) {
+  .weather-app {
+    --w-radius: 16px;
   }
 
-  .app-title {
-    font-size: 25px;
+  .wordmark-name {
+    font-size: 16px;
+  }
+
+  .wordmark-sub {
+    font-size: 11px;
+  }
+
+  .app-heading {
+    margin-bottom: 20px;
+  }
+
+  .app-desc {
+    font-size: 13.5px;
+  }
+}
+
+/* 아주 좁은 화면 */
+@media (max-width: 380px) {
+  .unit-btn {
+    min-width: 34px;
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .nav-pill {
+    padding: 7px 10px;
+    font-size: 12.5px;
   }
 }
 </style>

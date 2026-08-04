@@ -16,6 +16,7 @@
 <style scoped>
 .app-shell {
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: #0d1017;
   color: #f4f6fb;
@@ -24,6 +25,8 @@
 .app-main {
   height: 100%;
   overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
