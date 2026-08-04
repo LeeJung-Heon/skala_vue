@@ -1,3 +1,8 @@
+/**
+ * [실습] Pinia · Vue Router 등록
+ * - createPinia(): 전역 스토어 (configStore · weatherStore)
+ * - router: 클라이언트 사이드 라우팅
+ */
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 

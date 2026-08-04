@@ -1,3 +1,7 @@
+/**
+ * [실습] 과제 — 날씨 데이터 연동 / Mock → OpenWeather 응답으로 교체한 도시 목록 스토어
+ * [실습] 과제 — 과제 확장 / 도시 검색·추가·삭제 등 API·상태 확장
+ */
 import { defineStore } from 'pinia'
 import { fetchCityWeatherBundle, getCoordinates } from '@/api/openWeather'
 import { weatherCityDirectory, findCityMeta } from '@/data/weatherCities'

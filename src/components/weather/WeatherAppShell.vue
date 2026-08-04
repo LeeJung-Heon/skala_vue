@@ -1,4 +1,13 @@
 <script setup>
+/**
+ * [실습] 과제 — Router 활용 / Navigation Bar (RouterLink)
+ * [실습] 과제 — Store 활용 / UnitToggler 역할
+ * - Navigation 옆에 ℃ / ℉ 단위 스위치 배치
+ * - configStore.setUnit 으로 전역 단위 변경 → 메인·상세 기온 표기에 반영
+ *
+ * [실습] 과제 — 날씨 (컴포넌트) / 셸·슬롯 역할
+ * - WeatherAppShell 이 공통 레이아웃을 담당하고 <slot> 으로 페이지 본문을 받음
+ */
 import { useConfigStore } from '@/stores/configStore'
 
 defineProps({
@@ -30,12 +39,14 @@ const onAppBarClick = (event) => {
         <span class="wordmark-sub">Weather</span>
       </RouterLink>
 
+      <!-- [실습] 과제 — Router 활용 · 과제 확장 / Navigation Bar (RouterLink) -->
       <nav class="app-nav" aria-label="완성 앱 메뉴">
         <RouterLink to="/weather" class="nav-pill">대시보드</RouterLink>
         <RouterLink to="/weather/about" class="nav-pill">소개</RouterLink>
       </nav>
 
       <div class="app-bar-right">
+        <!-- [실습] 과제 — Store 활용 / UnitToggler UI (Navigation 옆) -->
         <div class="unit-switch" role="group" aria-label="온도 단위">
           <button
             type="button"
@@ -66,6 +77,7 @@ const onAppBarClick = (event) => {
         <p v-if="description" class="app-desc">{{ description }}</p>
       </div>
 
+      <!-- [실습] 과제 — 날씨 (컴포넌트) / slot 으로 페이지 본문 배치 -->
       <slot />
     </div>
   </div>
@@ -159,6 +171,7 @@ const onAppBarClick = (event) => {
   color: var(--w-muted);
   text-decoration: none;
   border-radius: 999px;
+  white-space: nowrap;
   transition:
     color 0.15s ease,
     background-color 0.15s ease;
@@ -274,6 +287,33 @@ const onAppBarClick = (event) => {
     --w-radius: 16px;
   }
 
+  .app-bar {
+    gap: 10px;
+  }
+
+  .wordmark,
+  .app-nav,
+  .app-bar-right {
+    min-width: 0;
+  }
+
+  .app-nav {
+    gap: 4px;
+    margin-left: 6px;
+  }
+
+  .nav-pill {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .unit-btn {
+    min-width: 34px;
+    min-height: 30px;
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
   .wordmark-name {
     font-size: 16px;
   }
@@ -291,17 +331,60 @@ const onAppBarClick = (event) => {
   }
 }
 
-/* 아주 좁은 화면 */
-@media (max-width: 380px) {
-  .unit-btn {
-    min-width: 34px;
-    padding: 5px 8px;
-    font-size: 12px;
+@media (max-width: 560px) {
+  .app-bar {
+    gap: 6px;
+  }
+
+  .wordmark {
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .wordmark-name {
+    font-size: 15px;
+  }
+
+  .wordmark-sub {
+    font-size: 10px;
+  }
+
+  .app-nav {
+    gap: 3px;
+    margin-left: 2px;
+    flex-shrink: 1;
   }
 
   .nav-pill {
-    padding: 7px 10px;
-    font-size: 12.5px;
+    padding: 5px 8px;
+    font-size: 11.5px;
+  }
+
+  .app-bar-right {
+    gap: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .unit-btn {
+    min-width: 32px;
+    min-height: 28px;
+    padding: 3px 7px;
+    font-size: 11.5px;
+  }
+}
+
+/* 아주 좁은 화면 */
+@media (max-width: 380px) {
+  .unit-btn {
+    min-width: 30px;
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+
+  .nav-pill {
+    padding: 4px 7px;
+    font-size: 11px;
   }
 }
 </style>

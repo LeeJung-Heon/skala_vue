@@ -1,3 +1,10 @@
+/**
+ * [실습] 과제 — Router 활용
+ * - Vue Router 설정: 라우트 지연 로딩(Lazy Loading) 적용
+ * - Catch-all Route (`/:pathMatch(.*)*`) → NotFoundView
+ * - 동적 세그먼트 `/weather/:cityId` 로 상세 페이지 연결
+ * - 정적 경로(`/weather/about`)를 동적 경로보다 먼저 선언
+ */
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
@@ -8,6 +15,7 @@ const routes = [
   {
     path: '/weather',
     name: 'WeatherHome',
+    // [실습] 과제 — Router 활용 / 라우터 지연 로딩
     component: () => import('@/views/WeatherHomeView.vue'),
     meta: { title: '대시보드' },
   },
@@ -18,12 +26,14 @@ const routes = [
     meta: { title: '소개' },
   },
   {
+    // [실습] 과제 — Router 활용 / WeatherDetailView — 동적 경로 cityId
     path: '/weather/:cityId',
     name: 'WeatherDetail',
     component: () => import('@/views/WeatherDetailView.vue'),
     meta: { title: '도시 상세' },
   },
   {
+    // [실습] 과제 — Router 활용 / Catch-all Route
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/NotFoundView.vue'),
@@ -32,6 +42,8 @@ const routes = [
 ]
 
 const router = createRouter({
+  // GitHub Pages 등 정적 호스팅에서도 경로가 깨지지 않도록 Hash History 사용
+  // [실습] 과제 — 완성 / Build 후 정적 파일(dist) GitHub Pages 호스팅
   history: createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {

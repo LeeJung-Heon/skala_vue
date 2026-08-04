@@ -1,27 +1,35 @@
+/**
+ * [실습] 과제 — Store 활용 / stores/configStore.js
+ * - state · unit — 온도 단위 (초기값: celsius)
+ * - getters · unitSymbol — 현재 단위 기호 (℃ / ℉)
+ * - actions · toggleUnit — celsius ↔ fahrenheit 토글
+ *
+ * 완성 앱에서는 헤더 스위치가 값을 직접 고르도록 setUnit · toDisplayTemp 를 추가했습니다.
+ * (메인/상세 화면이 동일 스토어를 공유해 단위 변경이 전역 반영됩니다.)
+ */
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useConfigStore = defineStore('config', () => {
-  // 1. state: 단위를 저장하는 변수 (초기값은 'celsius')
-  // 값은 오직 'celsius' 또는 'fahrenheit' 두 가지만 가집니다.
+  // [실습] state · unit
   const unit = ref('celsius')
 
-  // 2. getters: 현재 단위 상태에 맞춰 화면에 뿌릴 기호(℃ / ℉)를 실시간 리턴
+  // [실습] getters · unitSymbol
   const unitSymbol = computed(() => {
     return unit.value === 'celsius' ? '℃' : '℉'
   })
 
-  // 3. actions: 버튼 클릭 시 'celsius'와 'fahrenheit'를 토글(스위칭)하는 함수
+  // [실습] actions · toggleUnit
   function toggleUnit() {
     unit.value = unit.value === 'celsius' ? 'fahrenheit' : 'celsius'
   }
 
-  // 완성 앱의 단위 스위치는 토글이 아니라 두 값 중 하나를 직접 고릅니다.
+  // 완성 앱: 단위 버튼이 ℃ / ℉ 중 하나를 직접 선택
   function setUnit(next) {
     unit.value = next === 'fahrenheit' ? 'fahrenheit' : 'celsius'
   }
 
-  // 저장된 원본 값은 항상 섭씨이므로, 화면에 뿌릴 때만 현재 단위로 환산합니다.
+  // 원본 API 값은 섭씨 고정 → 화면 표시 시에만 환산
   function toDisplayTemp(celsius) {
     if (unit.value === 'fahrenheit') return Math.round(celsius * (9 / 5) + 32)
     return Math.round(celsius)

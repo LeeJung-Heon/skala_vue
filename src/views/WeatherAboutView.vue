@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * [실습] 과제 — Router 활용 / WeatherAboutView
+ * - 앱 소개 내용 작성
+ * - 메인 대시보드로 돌아가기 (router.push WeatherHome)
+ */
 import { useRouter } from 'vue-router'
 import WeatherAppShell from '@/components/weather/WeatherAppShell.vue'
 import WeatherIcon from '@/components/weather/WeatherIcon.vue'
@@ -9,7 +14,7 @@ const router = useRouter()
 const stack = [
   {
     title: '컴포넌트 분리',
-    body: 'components/weather/ 의 셸 · 검색 · 카드 · WeatherIcon 부품을 조합해 화면을 구성합니다. 실습용 부품과 완성 앱 부품을 분리해 두었습니다.',
+    body: 'components/weather/ 의 셸 · 검색 · 카드 · WeatherIcon 부품을 조합해 화면을 구성합니다.',
   },
   {
     title: '클라이언트 라우팅',
@@ -30,6 +35,7 @@ const stack = [
 ]
 
 const handleGoHome = () => {
+  // [실습] 메인 대시보드로 돌아가기
   router.push({ name: 'WeatherHome' })
 }
 </script>
@@ -166,5 +172,51 @@ const handleGoHome = () => {
   color: #0d1017;
   background: var(--w-accent);
   border-color: var(--w-accent);
+}
+
+@media (max-width: 560px) {
+  .stack-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .stack-card {
+    padding: 12px 10px;
+  }
+
+  .stack-title {
+    margin-bottom: 6px;
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .stack-body {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .icon-gallery {
+    padding: 18px 14px;
+  }
+
+  .gallery-grid {
+    grid-auto-flow: column;
+    grid-auto-columns: clamp(84px, 18vw, 110px);
+    overflow-x: auto;
+    gap: 8px;
+  }
+
+  .gallery-grid li {
+    padding: 12px 8px;
+  }
+
+  .gallery-label {
+    font-size: 10.5px;
+    line-height: 1.3;
+  }
+
+  .home-btn {
+    width: 100%;
+  }
 }
 </style>

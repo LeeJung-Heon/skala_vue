@@ -1,4 +1,14 @@
 <script setup>
+/**
+ * [실습] 과제 — 날씨 (컴포넌트) / SearchBar 역할
+ * - 검색어·결과 관련 값을 props 로 수신
+ * - update-query · add-suggestion · select-existing 를 emits
+ * - 스타일은 <style scoped>
+ *
+ * [실습] 과제 — 날씨 Mockup / 양방향 바인딩·한글 처리
+ * - 한글 IME 조합 중에는 input value 를 덮어쓰지 않음 (composition* 이벤트)
+ * - @input 으로 부모에 검색어 전달
+ */
 import { ref, watch, onMounted } from 'vue'
 
 const props = defineProps({

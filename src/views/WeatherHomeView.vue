@@ -1,4 +1,18 @@
 <script setup>
+/**
+ * [실습] 과제 — Router 활용 / WeatherHomeView
+ * - WeatherParent 역할을 뷰가 담당
+ * - 상세보기: alert 대신 router.push(`/weather/${id}`)
+ *
+ * [실습] 과제 — 날씨 (컴포지션)
+ * - 반응형 상태: searchQuery · cities(스토어) · selectedCityId
+ * - computed: listedCities — 검색어로 도시 목록 필터
+ * - watch: searchQuery — 타이핑 시 쿼리 동기화 · 원격 검색
+ * - 검색 결과 표시: 일치 목록 / 빈 검색어면 전체 / 없으면 안내 문구
+ *
+ * [실습] 과제 — 날씨 (컴포넌트)
+ * - CitySearchField · CityTile · WeatherAppShell 로 분리 (props / emits)
+ */
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -24,6 +38,7 @@ const weatherStore = useWeatherStore()
 const { cities, status, error, isLoading, adding, addError, selectedCityId, selectedCity } =
   storeToRefs(weatherStore)
 
+// [실습] 과제 — 날씨 (컴포지션) / 반응형 상태 · searchQuery
 const searchQuery = ref('')
 const remoteLocations = ref([])
 const searchingRemote = ref(false)
@@ -42,6 +57,7 @@ onBeforeUnmount(() => {
   if (searchTimer) clearTimeout(searchTimer)
 })
 
+// [실습] 과제 — 날씨 (컴포지션) / watch 로 searchQuery 감시 (쿼리 동기화 · API 검색)
 watch(searchQuery, (newQuery) => {
   const nextQuery = newQuery || undefined
   const currentQuery = Array.isArray(route.query.search)
@@ -100,7 +116,7 @@ const matchesQuery = (city, query) => {
   )
 }
 
-// 검색어에 맞춰 기존 도시 목록을 즉시 축소합니다 (IME 조합 중에도 반영).
+// [실습] 과제 — 날씨 (컴포지션) / computed — 검색어가 포함된 도시만 필터 (listedCities)
 const listedCities = computed(() => {
   const query = searchQuery.value.trim()
   if (!query) return cities.value
@@ -148,6 +164,7 @@ const hourlyBars = computed(() => {
 })
 
 const handleDetailJump = (id) => {
+  // [실습] 과제 — Router 활용 / 상세보기: alert 대신 router.push
   weatherStore.selectCity(id)
   router.push(`/weather/${id}`)
 }
@@ -294,9 +311,17 @@ watch(selectedCityId, (id, prevId) => {
             @add-suggestion="handleAddSuggestion"
             @select-existing="handleSelectExisting"
           />
+          <!--
+            [실습] 과제 — 날씨 (컴포넌트) / SearchBar 역할 → CitySearchField
+            props 로 검색어·결과 수신, update-query · select-existing emits
+          -->
         </header>
 
         <div v-if="listedCities.length" class="city-grid">
+          <!--
+            [실습] 과제 — 날씨 Mockup / 배열 렌더링 (v-for) · :key 에 id 바인딩
+            [실습] 과제 — 날씨 (컴포넌트) / WeatherCard 역할 → CityTile (props · select · detail emits)
+          -->
           <CityTile
             v-for="city in listedCities"
             :key="city.id"
@@ -307,6 +332,7 @@ watch(selectedCityId, (id, prevId) => {
             @remove="handleRemoveCity"
           />
         </div>
+        <!-- [실습] 과제 — 날씨 (컴포지션) / 검색 결과 없음 안내 -->
         <p v-else class="list-empty">
           <template v-if="searchQuery.trim()">
             “{{ searchQuery }}” 와 일치하는 도시가 없습니다. 위 검색 결과에서 추가해 보세요.
@@ -379,12 +405,11 @@ watch(selectedCityId, (id, prevId) => {
 
 .hero-city {
   margin: 0;
-  font-size: clamp(12px, 4vw, 24px);
+  font-size: 24px;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.035em;
   color: #ffffff;
-  text-wrap: balance;
 }
 
 .hero-region {
@@ -589,6 +614,90 @@ watch(selectedCityId, (id, prevId) => {
   .list-head :deep(.search) {
     max-width: none;
     margin-left: 0;
+  }
+}
+
+/* 좁은 화면: 구성은 유지하고 메인 카드·차트 크기만 비율 축소 */
+@media (max-width: 720px) {
+  .hero {
+    gap: 14px;
+    margin-bottom: 26px;
+  }
+
+  .hero-main,
+  .hero-chart {
+    padding: 18px 16px;
+  }
+
+  .hero-city {
+    font-size: 20px;
+  }
+
+  .hero-region {
+    font-size: 12px;
+  }
+
+  .hero-temp {
+    margin-top: 14px;
+    gap: 8px;
+  }
+
+  .hero-temp strong {
+    font-size: 40px;
+  }
+
+  .hero-unit {
+    font-size: 16px;
+  }
+
+  .hero-status {
+    font-size: 12.5px;
+  }
+
+  .hero-meta {
+    gap: 14px 18px;
+    margin-top: 16px;
+    padding-top: 14px;
+  }
+
+  .meta-item span {
+    font-size: 10.5px;
+  }
+
+  .meta-item strong {
+    font-size: 13.5px;
+  }
+
+  .hero-cta {
+    padding: 8px 12px;
+    font-size: 11.5px;
+  }
+
+  .chart-title {
+    margin-bottom: 14px;
+    font-size: 11px;
+  }
+
+  .chart-bars {
+    gap: 8px;
+    height: clamp(200px, 26vh, 260px);
+  }
+
+  .chart-col {
+    gap: 6px;
+  }
+
+  .chart-value {
+    font-size: 10.5px;
+  }
+
+  .chart-label {
+    font-size: 10px;
+  }
+
+  .city-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 </style>

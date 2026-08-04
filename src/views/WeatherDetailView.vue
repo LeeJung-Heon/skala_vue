@@ -1,4 +1,14 @@
 <script setup>
+/**
+ * [실습] 과제 — Router 활용 / WeatherDetailView
+ * - 동적 경로의 cityId 로 Mount(immediate watch) 시점에 도시 데이터 선택
+ *
+ * [실습] 과제 — Store 활용
+ * - configStore 단위 환산이 상세 지표에도 동일 적용
+ *
+ * [실습] 과제 — 날씨 데이터 연동
+ * - Mock 대신 weatherStore(OpenWeather 응답)에서 도시 객체 조회
+ */
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -45,6 +55,7 @@ const loadCity = async (cityId) => {
   }
 }
 
+// [실습] cityId 변경 시(마운트 포함) 해당 도시 데이터 로드
 watch(
   () => route.params.cityId,
   (cityId) => {

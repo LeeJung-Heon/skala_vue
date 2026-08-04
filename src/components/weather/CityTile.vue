@@ -1,4 +1,19 @@
 <script setup>
+/**
+ * [실습] 과제 — 날씨 (컴포넌트) / WeatherCard 역할
+ * - 도시 객체를 props(city) 로 수신
+ * - select · detail · remove 이벤트를 부모(WeatherHomeView)에 전달
+ * - 스타일은 <style scoped> 로 분리
+ *
+ * [실습] 과제 — 날씨 Mockup
+ * - 카드 클릭 → 선택 (select)
+ * - [상세보기] 는 @click.stop 으로 버블링 차단 후 detail emit
+ *   (초기 과제의 alert 는 Router 단계에서 router.push 로 대체됨)
+ * - 기온 구간 라벨(조건부 표현) — comfortOf 칩
+ *
+ * [실습] 과제 — Store 활용
+ * - configStore.toDisplayTemp / unitSymbol 로 단위 환산 표시
+ */
 import { useConfigStore } from '@/stores/configStore'
 import WeatherIcon from '@/components/weather/WeatherIcon.vue'
 
@@ -11,7 +26,7 @@ const emit = defineEmits(['select', 'detail', 'remove'])
 
 const config = useConfigStore()
 
-// 상세 예보 막대와 같은 섭씨 구간 기준
+// [실습] 과제 — 날씨 Mockup / 조건부 렌더링(기온 구간 라벨) — 완성 앱에서는 4단계로 확장
 const comfortOf = (celsius) => {
   if (celsius < 10) return { key: 'cold', label: '추움' }
   if (celsius < 20) return { key: 'cool', label: '선선함' }
@@ -21,6 +36,7 @@ const comfortOf = (celsius) => {
 </script>
 
 <template>
+  <!-- [실습] 카드 클릭 → select (초기: 상태바 문구 / 완성: 선택 도시 갱신) -->
   <article class="tile" :class="{ active }" @click="emit('select', city)">
     <header class="tile-head">
       <div>
@@ -47,6 +63,7 @@ const comfortOf = (celsius) => {
         <button type="button" class="tile-remove" @click.stop="emit('remove', city.id)">
           삭제
         </button>
+        <!-- [실습] 이벤트 수식어 .stop — 상세보기 클릭이 카드 select 로 버블링되지 않게 -->
         <button type="button" class="tile-link" @click.stop="emit('detail', city.id)">
           상세보기 →
         </button>
@@ -59,6 +76,7 @@ const comfortOf = (celsius) => {
 .tile {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   padding: 18px 18px 16px;
   border: 1px solid var(--w-border);
   border-radius: 18px;
@@ -86,6 +104,7 @@ const comfortOf = (celsius) => {
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+  min-width: 0;
 }
 
 .tile-name {
@@ -105,6 +124,7 @@ const comfortOf = (celsius) => {
 
 .tile-icon {
   margin-top: 2px;
+  flex: 0 0 auto;
 }
 
 .tile-temp {
@@ -134,6 +154,8 @@ const comfortOf = (celsius) => {
   align-items: center;
   justify-content: space-between;
   margin-top: 16px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .tile-chip {
@@ -141,6 +163,7 @@ const comfortOf = (celsius) => {
   font-size: 11.5px;
   font-weight: 700;
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 .tile-chip.cold {
@@ -167,6 +190,7 @@ const comfortOf = (celsius) => {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 0 0 auto;
 }
 
 .tile-remove {
@@ -177,6 +201,7 @@ const comfortOf = (celsius) => {
   background: transparent;
   border: 0;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .tile-remove:not(:disabled):hover {
@@ -193,11 +218,66 @@ const comfortOf = (celsius) => {
   background: transparent;
   border: 0;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .tile-link:not(:disabled):hover {
   color: var(--w-text);
   background: transparent;
   border: 0;
+}
+
+/* 좁은 화면: 구성은 유지하고 크기만 비율로 축소 */
+@media (max-width: 720px) {
+  .tile {
+    padding: 14px 14px 12px;
+    border-radius: 14px;
+  }
+
+  .tile-head {
+    gap: 8px;
+  }
+
+  .tile-name {
+    font-size: 13.5px;
+  }
+
+  .tile-region {
+    font-size: 11px;
+  }
+
+  .tile-temp {
+    margin-top: 12px;
+    font-size: 28px;
+  }
+
+  .tile-temp span {
+    font-size: 14px;
+  }
+
+  .tile-range {
+    font-size: 11.5px;
+  }
+
+  .tile-foot {
+    margin-top: 12px;
+  }
+
+  .tile-chip {
+    padding: 3px 8px;
+    font-size: 10.5px;
+  }
+
+  .tile-actions {
+    gap: 8px;
+  }
+
+  .tile-remove {
+    font-size: 11px;
+  }
+
+  .tile-link {
+    font-size: 11.5px;
+  }
 }
 </style>

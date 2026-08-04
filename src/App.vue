@@ -1,9 +1,15 @@
 <script setup>
+/**
+ * [실습] 과제 — Router 활용 / App.vue
+ * - 메인 콘텐츠 영역(RouterView) 배치
+ * - (완성 앱) 상단 Navigation 은 WeatherAppShell 로 이동해 날씨 UI 와 함께 둡니다.
+ */
 </script>
 
 <template>
   <div class="app-shell">
     <main class="app-main">
+      <!-- [실습] 과제 — Router 활용 / RouterView 로 페이지 전환 -->
       <RouterView v-slot="{ Component, route }">
         <transition name="fade" mode="out-in">
           <component :is="Component" :key="route.path" />

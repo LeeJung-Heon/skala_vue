@@ -8,6 +8,7 @@ dist/
 .vite/
 
 # Env (OpenWeather API key 등)
+# [실습] 과제 — 완성 / API 키는 Git 에 업로드되지 않도록 .env 를 무시
 .env
 .env.local
 .env.*.local
