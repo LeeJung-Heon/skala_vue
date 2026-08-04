@@ -15,8 +15,9 @@
 
 <style scoped>
 .app-shell {
+  /* svh: 키보드가 열려도 뷰포트 높이가 흔들리지 않음 (dvh는 입력 중 스크롤 튐 유발) */
   height: 100vh;
-  height: 100dvh;
+  height: 100svh;
   overflow: hidden;
   background: #0d1017;
   color: #f4f6fb;

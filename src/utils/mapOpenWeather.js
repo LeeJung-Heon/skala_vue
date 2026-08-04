@@ -119,19 +119,72 @@ export function mapWeatherIcon(weather = {}, windSpeed = 0) {
   return 'c1'
 }
 
-const hourLabel = (dtTxt) => {
-  // OpenWeather dt_txt 는 UTC. 로컬(한국) 시로 표시합니다.
-  const date = new Date(`${dtTxt.replace(' ', 'T')}Z`)
-  const hour = date.getHours()
+/** Unix 시각 + 도시 timezone(초) → 현지 시 라벨 */
+const hourLabelFromUnix = (unixSec, timezoneOffsetSec = 0) => {
+  const local = new Date((Number(unixSec) + Number(timezoneOffsetSec)) * 1000)
+  const hour = local.getUTCHours()
   return `${String(hour).padStart(2, '0')}시`
 }
 
-/** 예보 목록에서 가까운 5개 슬롯을 시간대별 기온으로 사용 */
-export function mapHourlyFromForecast(list = [], count = 5) {
-  return list.slice(0, count).map((item) => ({
-    label: hourLabel(item.dt_txt),
-    temp: Math.round(item.main.temp),
-  }))
+/** targetUnix 에 가장 가까운 예보 항목 */
+const nearestForecast = (list, targetUnix) => {
+  if (!list.length) return null
+  let best = list[0]
+  let bestDiff = Math.abs(Number(best.dt) - targetUnix)
+  for (let i = 1; i < list.length; i += 1) {
+    const diff = Math.abs(Number(list[i].dt) - targetUnix)
+    if (diff < bestDiff) {
+      best = list[i]
+      bestDiff = diff
+    }
+  }
+  return best
+}
+
+/**
+ * 현지 시각 '지금'부터 3시간 간격으로 5개 구간을 만듭니다.
+ *
+ * OpenWeather 3시간 예보는 보통 '다음 정각 슬롯'부터라서,
+ * 한국 오후 3시에도 첫 항목이 UTC 09:00(=KST 18시)인 경우가 많습니다.
+ * 그래서 첫 칸은 현재 관측 기온을 쓰고, 이후는 목표 시각에 가장 가까운 예보를 매칭합니다.
+ */
+export function mapHourlyFromForecast(
+  list = [],
+  count = 5,
+  timezoneOffsetSec = 0,
+  currentTemp = null,
+) {
+  if (!list.length && currentTemp == null) return []
+
+  const nowSec = Math.floor(Date.now() / 1000)
+  const stepSec = 3 * 60 * 60
+  const points = []
+
+  for (let i = 0; i < count; i += 1) {
+    const targetSec = nowSec + i * stepSec
+    const label = hourLabelFromUnix(targetSec, timezoneOffsetSec)
+
+    if (i === 0 && currentTemp != null && !Number.isNaN(Number(currentTemp))) {
+      points.push({
+        label,
+        temp: Math.round(Number(currentTemp)),
+        at: nowSec,
+        isNow: true,
+      })
+      continue
+    }
+
+    const match = nearestForecast(list, targetSec)
+    if (!match) break
+    points.push({
+      label,
+      temp: Math.round(match.main.temp),
+      at: match.dt,
+      isNow: false,
+    })
+  }
+
+  return points
 }
 
 /** 오늘(또는 예보 구간) 최고·최저 */
@@ -166,6 +219,7 @@ export function mapCityFromOpenWeather(meta, bundle) {
   const list = forecast?.list ?? []
   const wind = current.wind?.speed ?? 0
   const { high, low } = mapHighLow(current, list)
+  const timezoneOffsetSec = forecast?.city?.timezone ?? current?.timezone ?? 0
 
   return {
     id: meta.id,
@@ -174,6 +228,7 @@ export function mapCityFromOpenWeather(meta, bundle) {
     lat: bundle.lat ?? meta.lat,
     lon: bundle.lon ?? meta.lon,
     custom: Boolean(meta.custom),
+    timezoneOffsetSec,
     icon: mapWeatherIcon(weather, wind),
     status: mapWeatherStatus(weather, wind),
     temp: Math.round(current.main.temp),
@@ -183,6 +238,6 @@ export function mapCityFromOpenWeather(meta, bundle) {
     humidity: current.main.humidity,
     wind: Number(wind.toFixed(1)),
     rain: mapRainChance(list),
-    hourly: mapHourlyFromForecast(list, 5),
+    hourly: mapHourlyFromForecast(list, 5, timezoneOffsetSec, current.main.temp),
   }
 }

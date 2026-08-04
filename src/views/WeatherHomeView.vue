@@ -564,6 +564,7 @@ watch(selectedCityId, (id, prevId) => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
   gap: 14px;
+  overflow-anchor: none;
 }
 
 .list-empty {

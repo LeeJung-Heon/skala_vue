@@ -36,6 +36,8 @@ const router = createRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition
+    // 검색어 쿼리만 바뀌는 경우 스크롤을 유지합니다 (모바일 입력 중 튐 방지)
+    if (to.path === from.path) return false
     return { top: 0 }
   },
 })
