@@ -148,7 +148,7 @@ export const navSections = [
         name: 'WeatherHome',
         path: '/weather',
         label: 'Weather 대시보드',
-        desc: '라우터 · 스토어 · Axios 종합 실습',
+        desc: 'Skyline Weather 완성 앱 (OpenWeather)',
       },
       {
         name: 'ExerciseSteps',

@@ -30,8 +30,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Vite 는 빌드 시점에 VITE_* 를 번들에 넣습니다.
+      # .env 는 gitignore 되므로 Actions Secret 으로 주입합니다.
       - name: Build
         run: npm run build
+        env:
+          VITE_OPENWEATHER_API_KEY: ${{ secrets.VITE_OPENWEATHER_API_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

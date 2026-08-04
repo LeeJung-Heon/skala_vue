@@ -16,9 +16,22 @@ export const useConfigStore = defineStore('config', () => {
     unit.value = unit.value === 'celsius' ? 'fahrenheit' : 'celsius'
   }
 
+  // 완성 앱의 단위 스위치는 토글이 아니라 두 값 중 하나를 직접 고릅니다.
+  function setUnit(next) {
+    unit.value = next === 'fahrenheit' ? 'fahrenheit' : 'celsius'
+  }
+
+  // 저장된 원본 값은 항상 섭씨이므로, 화면에 뿌릴 때만 현재 단위로 환산합니다.
+  function toDisplayTemp(celsius) {
+    if (unit.value === 'fahrenheit') return Math.round(celsius * (9 / 5) + 32)
+    return Math.round(celsius)
+  }
+
   return {
     unit,
     unitSymbol,
     toggleUnit,
+    setUnit,
+    toDisplayTemp,
   }
 })

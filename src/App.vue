@@ -1,21 +1,28 @@
 <script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
+
+const route = useRoute()
+
+// 완성 앱(/weather)은 자체 헤더와 테마를 가지므로 실습용 크롬을 걷어냅니다.
+const isCompletedApp = computed(() => route.path.startsWith('/weather'))
 </script>
 
 <template>
-  <div class="app-shell">
-    <AppSidebar />
+  <div class="app-shell" :class="{ 'app-mode': isCompletedApp }">
+    <AppSidebar v-if="!isCompletedApp" />
 
     <div class="app-body">
       <main class="app-main">
-        <RouterView v-slot="{ Component, route }">
+        <RouterView v-slot="{ Component, route: r }">
           <transition name="fade" mode="out-in">
-            <component :is="Component" :key="route.path" />
+            <component :is="Component" :key="r.path" />
           </transition>
         </RouterView>
       </main>
 
-      <footer class="app-footer">
+      <footer v-if="!isCompletedApp" class="app-footer">
         <span class="footer-brand">SKALA-VUE</span>
         <span class="footer-note">모던 웹 애플리케이션 개발 실습실 · Vue 3 + Vite</span>
       </footer>
@@ -31,6 +38,10 @@ import AppSidebar from '@/components/layout/AppSidebar.vue'
   color: var(--skala-ink);
 }
 
+.app-shell.app-mode {
+  background: #0d1017;
+}
+
 .app-body {
   flex: 1;
   min-width: 0;
@@ -40,6 +51,19 @@ import AppSidebar from '@/components/layout/AppSidebar.vue'
 
 .app-main {
   flex: 1;
+  min-height: 0;
+}
+
+.app-mode .app-main {
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.app-mode .app-main::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .app-footer {

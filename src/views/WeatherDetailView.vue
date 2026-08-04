@@ -1,115 +1,379 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import PracticePage from '@/components/layout/PracticePage.vue'
+
+import WeatherAppShell from '@/components/weather/WeatherAppShell.vue'
+import WeatherIcon from '@/components/weather/WeatherIcon.vue'
+import { useConfigStore } from '@/stores/configStore'
+import { useWeatherStore } from '@/stores/weatherStore'
+import { bandLegendItems, barFillStyle } from '@/utils/tempBands'
 
 const route = useRoute()
 const router = useRouter()
+const config = useConfigStore()
+const weatherStore = useWeatherStore()
 
-const mockDetails = {
-  city_01: { name: '대한민국 서울특별시', temp: 28, status: '맑음', humidity: '55%', wind: '2.5m/s' },
-  city_02: { name: '경기도 수원시 영통구', temp: 24, status: '비', humidity: '85%', wind: '4.1m/s' },
-  city_03: { name: '부산광역시 해운대구', temp: 26, status: '구름', humidity: '65%', wind: '5.0m/s' },
+const city = ref(null)
+const isLoading = ref(false)
+const loadError = ref(null)
+
+const loadCity = async (cityId) => {
+  isLoading.value = true
+  loadError.value = null
+  try {
+    if (!weatherStore.isReady) {
+      await weatherStore.fetchAll()
+    }
+
+    const resolved =
+      weatherStore.findCity(cityId) ?? (await weatherStore.ensureCity(cityId))
+
+    if (!resolved && !weatherStore.resolveMeta(cityId)) {
+      city.value = null
+      return
+    }
+
+    city.value = resolved
+  } catch (error) {
+    city.value = null
+    loadError.value =
+      error?.response?.data?.message ||
+      error?.message ||
+      '상세 날씨 데이터를 불러오지 못했습니다.'
+  } finally {
+    isLoading.value = false
+  }
 }
 
-const cityData = ref(null)
+watch(
+  () => route.params.cityId,
+  (cityId) => {
+    loadCity(cityId)
+  },
+  { immediate: true },
+)
 
-onMounted(() => {
-  const id = route.params.cityId
-  if (mockDetails[id]) {
-    cityData.value = mockDetails[id]
-  }
+const hourlyBars = computed(() => {
+  if (!city.value) return []
+  return city.value.hourly.map((point) => ({
+    ...point,
+    style: barFillStyle(point.temp, 'horizontal'),
+  }))
+})
+
+const bandLegend = bandLegendItems()
+
+const metrics = computed(() => {
+  if (!city.value) return []
+  return [
+    { label: '체감 기온', value: `${config.toDisplayTemp(city.value.feels)}${config.unitSymbol}` },
+    {
+      label: '최고 / 최저',
+      value: `${config.toDisplayTemp(city.value.high)}° / ${config.toDisplayTemp(city.value.low)}°`,
+    },
+    { label: '대기 습도', value: `${city.value.humidity}%` },
+    { label: '현재 풍속', value: `${city.value.wind}m/s` },
+    { label: '강수 확률', value: `${city.value.rain}%` },
+    { label: '기상 현황', value: city.value.status },
+  ]
 })
 </script>
 
 <template>
-  <PracticePage
-    title="도시 상세"
-    description="URL 파라미터(:cityId)로 전달된 도시의 상세 관측 정보를 보여줍니다."
-  >
-    <div class="detail-container">
-      <h2>📊 지역별 상세 기상 관측 정보</h2>
+  <WeatherAppShell>
+    <button type="button" class="back" @click="router.push({ name: 'WeatherHome' })">
+      ← 대시보드
+    </button>
 
-      <div v-if="cityData" class="info-card">
-        <h4>📍 지정 지역: {{ cityData.name }}</h4>
-        <dl class="info-grid">
-          <dt>실시간 기온</dt>
-          <dd class="accent">{{ cityData.temp }}°C</dd>
-          <dt>기상 현황</dt>
-          <dd>{{ cityData.status }}</dd>
-          <dt>대기 습도</dt>
-          <dd>{{ cityData.humidity }}</dd>
-          <dt>현재 풍속</dt>
-          <dd>{{ cityData.wind }}</dd>
-        </dl>
-      </div>
-      <p v-else class="empty-result">해당 지역의 상세 데이터 장부가 존재하지 않습니다.</p>
+    <p v-if="isLoading" class="state-msg">상세 관측 정보를 동기화하는 중입니다…</p>
 
-      <button @click="router.push({ name: 'WeatherHome' })" class="back-btn">← 메인 대시보드로 돌아가기</button>
+    <div v-else-if="loadError" class="state-msg state-error">
+      <p>{{ loadError }}</p>
     </div>
-  </PracticePage>
+
+    <template v-else-if="city">
+      <section class="detail-hero">
+        <div>
+          <p class="detail-region">{{ city.region }}</p>
+          <h1 class="detail-name">{{ city.name }}</h1>
+          <p class="detail-status">{{ city.status }}</p>
+        </div>
+        <p class="detail-temp">
+          <WeatherIcon class="detail-icon" :name="city.icon" :size="40" :label="city.status" />
+          {{ config.toDisplayTemp(city.temp) }}<em>{{ config.unitSymbol }}</em>
+        </p>
+      </section>
+
+      <section class="metric-grid" aria-label="상세 관측 지표">
+        <div v-for="metric in metrics" :key="metric.label" class="metric">
+          <span>{{ metric.label }}</span>
+          <strong>{{ metric.value }}</strong>
+        </div>
+      </section>
+
+      <section class="timeline">
+        <header class="timeline-head">
+          <h2 class="timeline-title">오늘의 시간대별 예보</h2>
+          <ul class="band-legend" aria-label="기온 구간 색상">
+            <li v-for="item in bandLegend" :key="item.label">
+              <span class="band-swatch" :style="{ background: item.color }" aria-hidden="true"></span>
+              {{ item.label }}
+            </li>
+          </ul>
+        </header>
+        <ul class="timeline-list">
+          <li v-for="point in hourlyBars" :key="point.label">
+            <span class="timeline-label">{{ point.label }}</span>
+            <span class="timeline-track">
+              <span class="timeline-fill" :style="point.style"></span>
+            </span>
+            <strong class="timeline-temp">
+              {{ config.toDisplayTemp(point.temp) }}{{ config.unitSymbol }}
+            </strong>
+          </li>
+        </ul>
+      </section>
+    </template>
+
+    <p v-else class="not-found">해당 지역의 상세 데이터가 존재하지 않습니다.</p>
+  </WeatherAppShell>
 </template>
 
 <style scoped>
-.detail-container {
-  padding: 20px 22px 22px;
-  background: var(--skala-surface);
-  border: 1px solid var(--skala-border);
-  border-radius: var(--skala-radius);
-  box-shadow: var(--skala-shadow-sm);
-}
-
-.info-card {
-  margin: 16px 0 20px;
-  padding: 16px 18px;
-  background: var(--skala-surface-muted);
-  border: 1px solid var(--skala-border);
-  border-radius: var(--skala-radius-sm);
-}
-
-.info-card h4 {
-  margin: 0 0 14px;
-  font-size: 14.5px;
-  font-weight: 700;
-  color: var(--skala-slate-ink);
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 9px 20px;
-  margin: 0;
-}
-
-.info-grid dt {
+.back {
+  margin-bottom: 20px;
+  padding: 7px 14px;
   font-size: 12.5px;
-  color: var(--skala-text-muted);
-}
-
-.info-grid dd {
-  margin: 0;
-  font-size: 14px;
   font-weight: 600;
-  color: var(--skala-slate-ink);
-}
-
-.info-grid dd.accent {
-  color: var(--skala-green-dark);
-}
-
-.back-btn {
-  padding: 8px 14px;
-  font-weight: 600;
-  color: #ffffff;
-  background: var(--skala-slate);
-  border: 1px solid var(--skala-slate);
-  border-radius: var(--skala-radius-sm);
+  color: var(--w-muted);
+  background: transparent;
+  border: 1px solid var(--w-border);
+  border-radius: 999px;
   cursor: pointer;
 }
 
-.back-btn:not(:disabled):hover {
-  background: var(--skala-slate-deep);
-  border-color: var(--skala-slate-deep);
-  color: #ffffff;
+.back:not(:disabled):hover {
+  color: var(--w-text);
+  background: var(--w-panel);
+  border-color: var(--w-border-strong);
+}
+
+.state-msg {
+  margin: 0;
+  padding: 28px 20px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--w-muted);
+  border: 1px dashed var(--w-border);
+  border-radius: var(--w-radius);
+  background: var(--w-panel);
+}
+
+.state-error {
+  color: #f0a8a8;
+}
+
+.detail-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 26px 28px;
+  border: 1px solid var(--w-border);
+  border-radius: var(--w-radius);
+  background: var(--w-panel);
+}
+
+.detail-region {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--w-faint);
+}
+
+.detail-name {
+  margin: 8px 0 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: var(--w-text);
+}
+
+.detail-status {
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  color: var(--w-muted);
+}
+
+.detail-temp {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--w-text);
+}
+
+.detail-icon {
+  flex: 0 0 auto;
+}
+
+.detail-temp em {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--w-muted);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 16px 18px;
+  border: 1px solid var(--w-border);
+  border-radius: 16px;
+  background: var(--w-panel);
+}
+
+.metric span {
+  font-size: 11.5px;
+  color: var(--w-faint);
+}
+
+.metric strong {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--w-text);
+}
+
+.timeline {
+  margin-top: 18px;
+  padding: 22px 24px;
+  border: 1px solid var(--w-border);
+  border-radius: var(--w-radius);
+  background: var(--w-panel);
+}
+
+.timeline-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 16px;
+}
+
+.timeline-title {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--w-text);
+  border: 0;
+}
+
+.band-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 11px;
+  color: var(--w-faint);
+}
+
+.band-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.band-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline-list li {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 56px;
+  align-items: center;
+  gap: 14px;
+}
+
+.timeline-label {
+  font-size: 12px;
+  color: var(--w-faint);
+}
+
+.timeline-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.timeline-fill {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  border-radius: 999px;
+  transition:
+    width 0.28s ease,
+    background 0.28s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-fill {
+    transition: none;
+  }
+}
+
+.timeline-temp {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+  color: var(--w-text);
+}
+
+.not-found {
+  padding: 48px 0;
+  margin: 0;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--w-muted);
+  border: 1px dashed var(--w-border);
+  border-radius: var(--w-radius);
+}
+
+@media (max-width: 900px) {
+  .detail-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 </style>

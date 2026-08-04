@@ -1,0 +1,145 @@
+// Skyline Weather 도시 디렉터리.
+// 관측값(기온·습도 등)은 OpenWeather API 로 채우고,
+// 여기에는 화면용 메타(이름·지역·검색 쿼리·좌표)만 둡니다.
+// lat/lon 은 Geocoding API 결과를 고정해 둔 값입니다(호출 절약).
+
+export const weatherIconCatalog = [
+  { name: 's2', label: '은은한 발광' },
+  { name: 's3', label: '맥동 광선' },
+  { name: 'c1', label: '흘러가는 구름' },
+  { name: 'c2', label: '둥실 떠오르기' },
+  { name: 'c3', label: '해 뒤 구름' },
+  { name: 'r1', label: '우산' },
+  { name: 'r2', label: '비구름' },
+  { name: 'r3', label: '사선 소나기' },
+  { name: 't1', label: '번개' },
+  { name: 'n1', label: '눈' },
+  { name: 'w1', label: '바람자루' },
+  { name: 'f1', label: '안개' },
+]
+
+export const weatherCityDirectory = [
+  {
+    id: 'city_01',
+    name: '서울',
+    region: '대한민국 · 서울특별시',
+    queryName: '서울',
+    countryCode: 'KR',
+    lat: 37.5666791,
+    lon: 126.9782914,
+  },
+  {
+    id: 'city_02',
+    name: '수원',
+    region: '경기도 · 수원시 영통구',
+    queryName: '수원',
+    countryCode: 'KR',
+    lat: 37.2635727,
+    lon: 127.0286009,
+  },
+  {
+    id: 'city_03',
+    name: '부산',
+    region: '부산광역시 · 해운대구',
+    queryName: '부산',
+    countryCode: 'KR',
+    lat: 35.1795543,
+    lon: 129.0756416,
+  },
+  {
+    id: 'city_04',
+    name: '강릉',
+    region: '강원특별자치도 · 강릉시',
+    queryName: '강릉',
+    countryCode: 'KR',
+    lat: 37.751853,
+    lon: 128.8760574,
+  },
+  {
+    id: 'city_05',
+    name: '제주',
+    region: '제주특별자치도 · 제주시',
+    queryName: '제주',
+    countryCode: 'KR',
+    lat: 33.4996213,
+    lon: 126.5311884,
+  },
+  {
+    id: 'city_06',
+    name: '인천',
+    region: '인천광역시 · 연수구',
+    queryName: '인천',
+    countryCode: 'KR',
+    lat: 37.4562557,
+    lon: 126.7052062,
+  },
+  {
+    id: 'city_07',
+    name: '대구',
+    region: '대구광역시 · 중구',
+    queryName: '대구',
+    countryCode: 'KR',
+    lat: 35.8714354,
+    lon: 128.601445,
+  },
+  {
+    id: 'city_08',
+    name: '광주',
+    region: '광주광역시 · 서구',
+    queryName: '광주',
+    countryCode: 'KR',
+    lat: 35.1595454,
+    lon: 126.8526012,
+  },
+  {
+    id: 'city_09',
+    name: '대전',
+    region: '대전광역시 · 유성구',
+    queryName: '대전',
+    countryCode: 'KR',
+    lat: 36.3504119,
+    lon: 127.3845475,
+  },
+  {
+    id: 'city_10',
+    name: '청주',
+    region: '충청북도 · 청주시',
+    queryName: '청주',
+    countryCode: 'KR',
+    lat: 36.6424341,
+    lon: 127.4890319,
+  },
+  {
+    id: 'city_11',
+    name: '속초',
+    region: '강원특별자치도 · 속초시',
+    queryName: '속초',
+    countryCode: 'KR',
+    lat: 38.2070148,
+    lon: 128.5918437,
+  },
+  {
+    id: 'city_12',
+    name: '서산',
+    region: '충청남도 · 서산시',
+    queryName: '서산',
+    countryCode: 'KR',
+    lat: 36.7844993,
+    lon: 126.4503169,
+  },
+  {
+    id: 'city_13',
+    name: '여수',
+    region: '전라남도 · 여수시',
+    queryName: '여수',
+    countryCode: 'KR',
+    lat: 34.7603737,
+    lon: 127.6622221,
+  },
+]
+
+export const findCityMeta = (id) =>
+  weatherCityDirectory.find((city) => city.id === id) ?? null
+
+/** @deprecated 실시간 데이터는 weatherStore.findCity 를 사용하세요 */
+export const findCity = findCityMeta
