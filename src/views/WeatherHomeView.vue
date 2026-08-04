@@ -182,11 +182,9 @@ const handleRemoveCity = (id) => {
 
 const scrollHomeToTop = () => {
   const scroller = document.querySelector('.app-main')
-  if (scroller) {
-    scroller.scrollTo({ top: 0, behavior: 'smooth' })
-    return
-  }
+  if (scroller) scroller.scrollTo({ top: 0, behavior: 'smooth' })
   window.scrollTo({ top: 0, behavior: 'smooth' })
+  document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 watch(selectedCityId, (id, prevId) => {
@@ -229,19 +227,24 @@ watch(selectedCityId, (id, prevId) => {
     <template v-else-if="selectedCity">
       <section class="hero">
         <div class="hero-main">
-          <p class="hero-label">현재 관측 · {{ selectedCity.region }}</p>
+          <div class="hero-identity">
+            <p class="hero-label">현재 관측</p>
+            <h2 class="hero-city">{{ selectedCity.name }}</h2>
+            <p class="hero-region">{{ selectedCity.region }}</p>
+          </div>
+
           <div class="hero-temp">
             <WeatherIcon
               class="hero-icon"
               :name="selectedCity.icon"
-              :size="36"
+              :size="50"
               :label="selectedCity.status"
             />
             <strong>{{ config.toDisplayTemp(selectedCity.temp) }}</strong>
             <span class="hero-unit">{{ config.unitSymbol }}</span>
           </div>
           <p class="hero-status">
-            {{ selectedCity.name }} · {{ selectedCity.status }} · 체감
+            {{ selectedCity.status }} · 체감
             {{ config.toDisplayTemp(selectedCity.feels) }}{{ config.unitSymbol }}
           </p>
 
@@ -258,11 +261,10 @@ watch(selectedCityId, (id, prevId) => {
               <span>강수확률</span>
               <strong>{{ selectedCity.rain }}%</strong>
             </div>
+            <button type="button" class="hero-cta" @click="handleDetailJump(selectedCity.id)">
+              상세 관측 정보
+            </button>
           </div>
-
-          <button type="button" class="hero-cta" @click="handleDetailJump(selectedCity.id)">
-            상세 관측 정보 보기
-          </button>
         </div>
 
         <div class="hero-chart">
@@ -361,6 +363,12 @@ watch(selectedCityId, (id, prevId) => {
   box-sizing: border-box;
 }
 
+.hero-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .hero-label {
   margin: 0;
   font-size: 11.5px;
@@ -370,11 +378,29 @@ watch(selectedCityId, (id, prevId) => {
   color: var(--w-accent);
 }
 
+.hero-city {
+  margin: 0;
+  font-size: clamp(12px, 4vw, 24px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  text-wrap: balance;
+}
+
+.hero-region {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: rgba(244, 246, 251, 0.68);
+}
+
 .hero-temp {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
 .hero-icon {
@@ -382,7 +408,7 @@ watch(selectedCityId, (id, prevId) => {
 }
 
 .hero-temp strong {
-  font-size: 62px;
+  font-size: 50px;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.05em;
@@ -399,12 +425,15 @@ watch(selectedCityId, (id, prevId) => {
 .hero-status {
   margin: 12px 0 0;
   font-size: 14px;
-  color: var(--w-muted);
+  font-weight: 600;
+  color: rgba(244, 246, 251, 0.72);
 }
 
 .hero-meta {
   display: flex;
-  gap: 26px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 20px 26px;
   margin-top: 20px;
   padding-top: 18px;
   border-top: 1px solid var(--w-border);
@@ -428,8 +457,8 @@ watch(selectedCityId, (id, prevId) => {
 }
 
 .hero-cta {
-  margin-top: 22px;
-  padding: 10px 18px;
+  margin-left: auto;
+  padding: 10px 16px;
   font-size: 13px;
   font-weight: 700;
   color: #0d1017;
@@ -437,6 +466,7 @@ watch(selectedCityId, (id, prevId) => {
   border: 1px solid var(--w-text);
   border-radius: 999px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .hero-cta:not(:disabled):hover {

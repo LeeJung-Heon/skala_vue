@@ -15,13 +15,14 @@
 
 <style scoped>
 .app-shell {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: #0d1017;
   color: #f4f6fb;
 }
 
 .app-main {
-  min-height: 100vh;
+  height: 100%;
   overflow: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
