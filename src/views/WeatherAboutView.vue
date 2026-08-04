@@ -176,23 +176,22 @@ const handleGoHome = () => {
 
 @media (max-width: 560px) {
   .stack-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .stack-card {
-    padding: 12px 10px;
+    padding: 16px 16px;
   }
 
   .stack-title {
-    margin-bottom: 6px;
-    font-size: 12px;
-    line-height: 1.2;
+    margin-bottom: 8px;
+    font-size: 14px;
   }
 
   .stack-body {
-    font-size: 11px;
-    line-height: 1.45;
+    font-size: 12.5px;
+    line-height: 1.6;
   }
 
   .icon-gallery {
@@ -200,9 +199,7 @@ const handleGoHome = () => {
   }
 
   .gallery-grid {
-    grid-auto-flow: column;
-    grid-auto-columns: clamp(84px, 18vw, 110px);
-    overflow-x: auto;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
     gap: 8px;
   }
 
