@@ -8,11 +8,23 @@ defineProps({
 })
 
 const config = useConfigStore()
+
+const scrollPageToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+  document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+  document.body.scrollTo?.({ top: 0, behavior: 'smooth' })
+}
+
+/** 링크·버튼이 아닌 상단바 영역을 탭하면 맨 위로 이동합니다 */
+const onAppBarClick = (event) => {
+  if (event.target.closest('a, button, .unit-switch')) return
+  scrollPageToTop()
+}
 </script>
 
 <template>
   <div class="weather-app">
-    <header class="app-bar">
+    <header class="app-bar" @click="onAppBarClick">
       <RouterLink to="/weather" class="wordmark">
         <span class="wordmark-name">Skyline</span>
         <span class="wordmark-sub">Weather</span>
@@ -107,6 +119,7 @@ const config = useConfigStore()
   border-bottom: 1px solid var(--w-border);
   background: rgba(13, 16, 23, 0.88);
   backdrop-filter: blur(12px);
+  cursor: pointer;
 }
 
 .wordmark {

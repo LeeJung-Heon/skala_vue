@@ -181,10 +181,9 @@ const handleRemoveCity = (id) => {
 }
 
 const scrollHomeToTop = () => {
-  const scroller = document.querySelector('.app-main')
-  if (scroller) scroller.scrollTo({ top: 0, behavior: 'smooth' })
   window.scrollTo({ top: 0, behavior: 'smooth' })
   document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+  document.body.scrollTo?.({ top: 0, behavior: 'smooth' })
 }
 
 watch(selectedCityId, (id, prevId) => {
