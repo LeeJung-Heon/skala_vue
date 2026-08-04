@@ -1,44 +1,24 @@
-# skala-vue
+# Skyline Weather
 
-This template should help get you started developing with Vue 3 in Vite.
+OpenWeatherMap 기반 Vue 3 날씨 앱입니다.
 
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+## 시작하기
 
 ```sh
+cp .env.example .env
+# .env 에 VITE_OPENWEATHER_API_KEY 입력
+
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+## 스크립트
 
-```sh
-npm run build
-```
+- `npm run dev` — 로컬 개발 서버
+- `npm run build` — 프로덕션 빌드
+- `npm run preview` — 빌드 결과 미리보기
 
-### Lint with [ESLint](https://eslint.org/)
+## 배포
 
-```sh
-npm run lint
-```
+GitHub Pages 워크플로(`.github/workflows/deploy-pages.yml`)가 `main` 푸시 시 빌드합니다.  
+Actions Secret에 `VITE_OPENWEATHER_API_KEY`를 등록해 주세요.

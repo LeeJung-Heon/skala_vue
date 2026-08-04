@@ -44,7 +44,6 @@ const config = useConfigStore()
             ℉
           </button>
         </div>
-        <RouterLink to="/" class="exit-link">실습으로 나가기</RouterLink>
       </div>
     </header>
 
@@ -191,24 +190,6 @@ const config = useConfigStore()
 .unit-btn.on {
   color: #0d1017;
   background: var(--w-accent);
-}
-
-.exit-link {
-  padding: 7px 14px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--w-muted);
-  text-decoration: none;
-  border: 1px solid var(--w-border);
-  border-radius: 999px;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.exit-link:hover {
-  color: var(--w-text);
-  border-color: var(--w-border-strong);
 }
 
 .app-body {

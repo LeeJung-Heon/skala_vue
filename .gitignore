@@ -12,13 +12,8 @@ dist/
 .env.local
 .env.*.local
 
-# local workspace artifacts
-skala-vue/
-src/components/test.vue
-src/components/vue.config.js
-
 # logs
 *.log
 
-# claude files
+# local tooling
 .claude/
