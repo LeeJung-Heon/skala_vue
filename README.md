@@ -22,4 +22,4 @@ npm run dev
 ## 배포
 
 GitHub Pages 워크플로(`.github/workflows/deploy-pages.yml`)가 `main` 푸시 시 빌드합니다.  
-Actions Secret에 `VITE_OPENWEATHER_API_KEY`를 등록해 주세요.
+Actions Secret에 `VITE_OPENWEATHER_API_KEY` , `VITE_GOOGLE_MAPS_API_KEY`를 등록해 주세요.
