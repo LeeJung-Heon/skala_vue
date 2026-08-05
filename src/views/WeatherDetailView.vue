@@ -478,11 +478,6 @@ const skyMetrics = computed(() => {
 }
 
 @media (max-width: 900px) {
-  .detail-hero {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .metric-grid,
   .metric-grid-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -490,6 +485,45 @@ const skyMetrics = computed(() => {
 }
 
 @media (max-width: 720px) {
+  /* 기온 블록을 옆에 유지한 채 텍스트 줄 높이에 맞춰 카드를 낮춥니다 */
+  .detail-hero {
+    gap: 12px;
+    padding: 18px 16px;
+  }
+
+  .detail-hero > div {
+    min-width: 0;
+  }
+
+  .detail-region {
+    font-size: 11px;
+  }
+
+  .detail-name {
+    margin-top: 5px;
+    font-size: 22px;
+  }
+
+  .detail-status {
+    margin-top: 5px;
+    font-size: 12.5px;
+  }
+
+  .detail-temp {
+    gap: 8px;
+    font-size: 38px;
+  }
+
+  .detail-temp em {
+    font-size: 15px;
+  }
+
+  /* WeatherIcon 은 size prop 을 인라인 스타일로 넣어 !important 로만 덮을 수 있습니다 */
+  .detail-icon {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
   .metric {
     padding: 13px 14px;
     gap: 6px;
