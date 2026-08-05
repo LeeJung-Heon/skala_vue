@@ -1,6 +1,6 @@
 <script setup>
 /**
- * [실습] 과제 — Router 활용 / Catch-all → NotFoundView
+ * — Router 활용 / Catch-all → NotFoundView
  */
 import WeatherAppShell from '@/components/weather/WeatherAppShell.vue'
 </script>

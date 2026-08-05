@@ -1,10 +1,10 @@
 /**
- * OpenWeather 응답 → Skyline Weather 도시 객체로 변환합니다.
- * icon 키는 WeatherIcon.vue 이름과 1:1 대응합니다.
+ * OpenWeather 응답 → Skyline Weather 도시 객체로 변환
+ * icon 키는 WeatherIcon.vue 이름과 1:1 대응
  *
- * 기상 현황(status)은 API 의 lang=kr description 을 쓰지 않습니다.
+ * 기상 현황(status)은 API 의 lang=kr description 을 쓰지 않음
  * OpenWeather 한국어 번역이 "튼구름", "온흐림", "구름조금"처럼
- * 잘리거나 어색한 경우가 많아, weather.id 기준으로 앱 표기를 통일합니다.
+ * 잘리거나 어색한 경우가 많아, weather.id 기준으로 앱 표기를 통일
  * @see https://openweathermap.org/weather-conditions
  */
 
@@ -258,11 +258,11 @@ export function mapCityFromOpenWeather(meta, bundle) {
     rain: mapRainChance(list),
     hourly: mapHourlyFromForecast(list, 5, timezoneOffsetSec, current),
 
-    // [실습] 과제 확장 / 상세 관측 지표 — 응답에 이미 담겨 있던 값들
+    // 상세 관측 지표 — 응답에 이미 담겨 있던 값들
     windDeg: current.wind?.deg ?? null,
     windDirection: windDirectionLabel(current.wind?.deg),
     windGust: current.wind?.gust != null ? Number(current.wind.gust.toFixed(1)) : null,
-    /** 가시거리(m) — 최대치는 10000 으로 잘려서 옵니다 */
+    /** 가시거리(m) — 최대치는 10000 으로 잘려서 옴*/
     visibility: current.visibility ?? null,
     clouds: current.clouds?.all ?? null,
     rainAmount: precipAmount(current.rain),
@@ -270,7 +270,7 @@ export function mapCityFromOpenWeather(meta, bundle) {
     /** 일교차 — 앞으로 24시간 예보의 최고·최저 차 */
     tempRange: high - low,
 
-    // [실습] 과제 확장 / 일출·일몰 패널용 (Unix 초, UTC 기준)
+    // 일출·일몰 패널용 (Unix 초, UTC 기준)
     sunrise: current.sys?.sunrise ?? null,
     sunset: current.sys?.sunset ?? null,
   }

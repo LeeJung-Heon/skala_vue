@@ -1,12 +1,12 @@
 <script setup>
 /**
- * [실습] 과제 — 날씨 (컴포넌트) / 히어로 우측 카드
- * - 하나의 카드 안에서 세 패널을 스위칭합니다
+ * — 날씨 (컴포넌트) / 히어로 우측 카드
+ * - 하나의 카드 안에서 세 패널을 스위칭
  *   1) 시간대별 기온 (막대 차트)
  *   2) 시간대별 기상 상태 (HourlySkyStrip)
  *   3) 일출 & 일몰 (SunArcPanel)
  *
- * [실습] 과제 — 날씨 (컴포지션)
+ * — 날씨 (컴포지션)
  * - 반응형 상태: activeTab
  * - computed: hourlyBars (도시가 바뀌면 자동 재계산)
  */
@@ -51,7 +51,7 @@ const hourlyBars = computed(() => {
     <header class="insight-head">
       <h3 class="insight-title">{{ activeTitle }}</h3>
 
-      <!-- [실습] 과제 — 날씨 Mockup / 조건부 렌더링 · 탭 스위칭 -->
+      <!-- 날씨 Mockup / 조건부 렌더링 · 탭 스위칭 -->
       <div class="tab-switch" role="tablist" aria-label="패널 선택">
         <button
           v-for="tab in TABS"
@@ -154,8 +154,8 @@ const hourlyBars = computed(() => {
   background: var(--w-accent);
 }
 
-/* 세 패널이 같은 높이를 써서 탭을 바꿔도 카드 크기가 변하지 않습니다 */
-.panel {
+/* 세 패널이 같은 높이를 써서 탭을 바꿔도 카드 크기가 변하지 않음 */
+.panel 음
   flex: 1;
   min-height: clamp(160px, 20vh, 200px);
 }

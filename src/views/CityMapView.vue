@@ -1,12 +1,11 @@
 <script setup>
 /**
- * [실습] 과제 — Router 활용 / CityMapView
+ * — Router 활용 / CityMapView
  * - 동적 경로 `/weather/:cityId/map` 으로 진입해 해당 도시를 3D 지도에 표시
  * - Google Maps JS API `maps3d` 라이브러리의 Map3DElement · Marker3DElement 사용
- *   (원본: js-api-samples / 3d-simple-map)
  *
  * Map3DElement 는 커스텀 엘리먼트라 템플릿에 직접 쓰지 않고,
- * 컨테이너 ref 에 스크립트로 생성·append 합니다.
+ * 컨테이너 ref 에 스크립트로 생성·append
  */
 import { ref, shallowRef, computed, watch, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -29,10 +28,10 @@ const myLocation = ref(null)
 const locating = ref(false)
 const locateError = ref('')
 
-// 지도 인스턴스는 반응형으로 감쌀 필요가 없습니다(무거운 DOM 객체).
+// 지도 인스턴스는 반응형으로 감쌀 필요가 없음(무거운 DOM 객체).
 const mapEl = shallowRef(null)
 
-/** 도시 좌표는 스토어의 로드된 도시 → 메타 순으로 찾습니다. */
+/** 도시 좌표는 스토어의 로드된 도시 → 메타 순으로 찾음*/
 const resolvePlace = async (cityId) => {
   const loaded = weatherStore.findCity(cityId)
   if (loaded) return loaded
@@ -40,7 +39,7 @@ const resolvePlace = async (cityId) => {
   const meta = weatherStore.resolveMeta(cityId)
   if (meta) return meta
 
-  // 새로고침으로 바로 들어온 경우 목록을 한 번 채운 뒤 다시 찾습니다.
+  // 새로고침으로 바로 들어온 경우 목록을 한 번 채운 뒤 다시 찾음
   if (!weatherStore.isReady) await weatherStore.fetchAll()
   return weatherStore.findCity(cityId) ?? weatherStore.resolveMeta(cityId)
 }
@@ -50,7 +49,7 @@ const destroyMap = () => {
   mapEl.value = null
 }
 
-/** 마커 위에 항상 떠 있는 말풍선 내용(제목 + 부제)을 만듭니다. */
+/** 마커 위에 항상 떠 있는 말풍선 내용(제목 + 부제)을 만듬 */
 const buildLabelContent = ({ title, subtitle, accent }) => {
   const wrap = document.createElement('div')
   wrap.style.cssText = 'padding:2px 4px;text-align:center;white-space:nowrap;color:#f4f6fb'
@@ -68,9 +67,9 @@ const buildLabelContent = ({ title, subtitle, accent }) => {
 }
 
 /**
- * 라벨(Popover)이 붙은 3D 마커를 지도에 추가합니다.
+ * 라벨(Popover)이 붙은 3D 마커를 지도에 추가
  * Marker3DElement 의 label 속성은 3D 지도에서 텍스트로 그려지지 않아
- * 마커에 고정한 Popover 로 이름을 표시합니다.
+ * 마커에 고정한 Popover 로 이름을 표시
  */
 const appendLabeledMarker = (map, lib, { position, title, subtitle, accent }) => {
   const { Marker3DInteractiveElement, PopoverElement } = lib
@@ -95,7 +94,7 @@ const appendLabeledMarker = (map, lib, { position, title, subtitle, accent }) =>
 
 const MY_LOCATION_ACCENT = '#8fd0ff'
 
-/** 지도에 내 위치 마커를 올립니다(지도 재생성 시에도 다시 호출). */
+/** 지도에 내 위치 마커를 올림(지도 재생성 시에도 다시 호출) */
 const appendMyLocationMarker = (map, lib) => {
   if (!myLocation.value) return
   appendLabeledMarker(map, lib, {
@@ -110,7 +109,7 @@ const renderMap = async (target) => {
   const lib = await loadMaps3d()
   const { Map3DElement } = lib
 
-  // 로딩 중에 다른 도시로 이동했다면 렌더링을 버립니다.
+  // 로딩 중에 다른 도시로 이동했다면 렌더링을 버림
   if (place.value?.id !== target.id || !mapHost.value) return
 
   destroyMap()
@@ -158,7 +157,7 @@ const distanceLabel = computed(() => {
   return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km`
 })
 
-/** 카메라를 특정 좌표로 부드럽게 이동합니다. */
+/** 카메라를 특정 좌표로 부드럽게 이동 */
 const flyTo = (position, range = 1800) => {
   mapEl.value?.flyCameraTo({
     endCamera: {
@@ -171,7 +170,7 @@ const flyTo = (position, range = 1800) => {
   })
 }
 
-/** [실습] 과제 확장 — Geolocation API 로 현재 위치를 지도에 표시 */
+/** — Geolocation API 로 현재 위치를 지도에 표시 */
 const locateMe = () => {
   if (myLocation.value) {
     // 이미 찾았다면 카메라만 내 위치로 이동
@@ -212,7 +211,7 @@ const locateMe = () => {
   )
 }
 
-/** 카메라를 다시 도시 위치로 되돌립니다. */
+/** 카메라를 다시 도시 위치로 되돌림 */
 const focusCity = () => {
   if (!place.value) return
   flyTo({ lat: Number(place.value.lat), lng: Number(place.value.lon) })
@@ -249,7 +248,7 @@ const load = async (cityId) => {
   }
 }
 
-// [실습] cityId 변경 시(마운트 포함) 지도 갱신
+// cityId 변경 시(마운트 포함) 지도 갱신
 watch(
   () => route.params.cityId,
   (cityId) => {

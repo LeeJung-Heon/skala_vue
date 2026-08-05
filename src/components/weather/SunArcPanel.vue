@@ -1,11 +1,10 @@
 <script setup>
 /**
- * [실습] 과제 — 날씨 (컴포넌트) / 일출·일몰 패널
- * - 완만한 원호 궤적 위에 해의 현재 위치를 표시합니다
- * - 메인의 CityInsightCard(일출·일몰 탭)와 상세 페이지가 함께 씁니다
+ * - 날씨 (컴포넌트) / 일출·일몰 패널
+ * - 완만한 원호 궤적 위에 해의 현재 위치를 표시함
+ * - 메인의 CityInsightCard(일출·일몰 탭)와 상세 페이지가 함께 씀
  *
- * 해는 CSS motion path(offset-path)로 궤적 위만 따라 움직입니다.
- * cx/cy 를 각각 보간하면 두 점 사이를 직선으로 가로질러 궤적을 벗어납니다.
+ * 해는 CSS motion path(offset-path)로 궤적 위만 따라 움직임
  */
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 
@@ -17,9 +16,9 @@ const props = defineProps({
 
 /**
  * 원호 기하 — 지평선 위로 살짝 솟은 완만한 곡선.
- * 현(chord) 폭 W, 중앙 높이(sagitta) H 로부터 반지름 R 을 구합니다.
- *   R = (W²/4 + H²) / 2H
- * 반원(H = W/2)보다 훨씬 낮아 카드 높이를 다른 탭과 맞출 수 있습니다.
+ * 현(chord) 폭 W, 중앙 높이(sagitta) H 로부터 반지름 R 을 구함.
+ *   R = (W²/4 + H²) / 2음
+ * 반원(H = W/2)보다 훨씬 낮아 카드 높이를 다른 탭과 맞출 수 있음
  */
 const VIEW = { w: 280, h: 122 }
 const ARC = { cx: 140, base: 114, width: 250, rise: 100 }
@@ -77,7 +76,7 @@ const sun = computed(() => {
 
 /**
  * 궤적 위 해의 좌표 — offset-path 를 지원하지 않는 브라우저를 위한 값이자,
- * 계산이 궤적을 벗어나지 않는지 확인하는 기준입니다.
+ * 계산이 궤적을 벗어나지 않는지 확인하는 기준
  * φ 는 -HALF_ANGLE(일출) ~ +HALF_ANGLE(일몰).
  */
 const sunPoint = computed(() => {
@@ -205,7 +204,7 @@ const ariaLabel = computed(() =>
   transition: stroke-dasharray 0.4s ease;
 }
 
-/* offset-path 로 이동하므로 좌표 보간이 궤적을 벗어나지 않습니다 */
+/* offset-path 로 이동하므로 좌표 보간이 궤적을 벗어나지 않음 */
 .arc-marker {
   offset-rotate: 0deg;
   transition: offset-distance 0.4s ease;

@@ -1,11 +1,11 @@
 <script setup>
 /**
- * [실습] 과제 — 날씨 (컴포넌트) / SearchBar 역할
+ * — 날씨 (컴포넌트) / SearchBar 역할
  * - 검색어·결과 관련 값을 props 로 수신
  * - update-query · add-suggestion · select-existing 를 emits
  * - 스타일은 <style scoped>
  *
- * [실습] 과제 — 날씨 Mockup / 양방향 바인딩·한글 처리
+ * — 날씨 Mockup / 양방향 바인딩·한글 처리
  * - 한글 IME 조합 중에는 input value 를 덮어쓰지 않음 (composition* 이벤트)
  * - @input 으로 부모에 검색어 전달
  */
@@ -35,8 +35,8 @@ onMounted(() => {
   setInputValue(props.currentQuery)
 })
 
-// 부모에서 지움/외부 동기화할 때만 DOM 값을 맞춥니다.
-// 조합(IME) 중에는 절대 value 를 덮어쓰지 않습니다.
+// 부모에서 지움/외부 동기화할 때만 DOM 값을 맞춤
+// 조합(IME) 중에는 절대 value 를 덮어쓰지 않음
 watch(
   () => props.currentQuery,
   (value) => {
@@ -88,8 +88,8 @@ const onSelectSuggestion = (item) => {
     <div class="field">
       <span class="field-icon" aria-hidden="true">⌕</span>
       <!--
-        한글 IME: :value 제어 컴포넌트는 조합 중 리렌더 시 글자를 지웁니다.
-        DOM value 는 비제어로 두고, 외부 동기화만 watch 로 처리합니다.
+        한글 IME: :value 제어 컴포넌트는 조합 중 리렌더 시 글자를 지움 
+        DOM value 는 비제어로 두고, 외부 동기화만 watch 로 처리함
       -->
       <input
         ref="inputEl"
@@ -189,7 +189,7 @@ const onSelectSuggestion = (item) => {
   min-width: 0;
   height: 100%;
   padding: 0;
-  /* iOS는 16px 미만 input 포커스 시 자동 확대하므로 이 값을 유지합니다 */
+  /* iOS는 16px 미만 input 포커스 시 자동 확대하므로 이 값을 유지 */
   font-size: 16px;
   font-family: inherit;
   color: var(--w-text);

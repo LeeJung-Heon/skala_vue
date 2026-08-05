@@ -1,17 +1,17 @@
 <script setup>
 /**
- * [실습] 과제 — 날씨 (컴포넌트) / WeatherCard 역할
+ * — 날씨 (컴포넌트) / WeatherCard 역할
  * - 도시 객체를 props(city) 로 수신
  * - select · detail · remove 이벤트를 부모(WeatherHomeView)에 전달
  * - 스타일은 <style scoped> 로 분리
  *
- * [실습] 과제 — 날씨 Mockup
+ * — 날씨 Mockup
  * - 카드 클릭 → 선택 (select)
  * - [상세보기] 는 @click.stop 으로 버블링 차단 후 detail emit
  *   (초기 과제의 alert 는 Router 단계에서 router.push 로 대체됨)
  * - 기온 구간 라벨(조건부 표현) — comfortOf 칩
  *
- * [실습] 과제 — Store 활용
+ * — Store 활용
  * - configStore.toDisplayTemp / unitSymbol 로 단위 환산 표시
  */
 import { useConfigStore } from '@/stores/configStore'
@@ -26,7 +26,7 @@ const emit = defineEmits(['select', 'detail', 'remove'])
 
 const config = useConfigStore()
 
-// [실습] 과제 — 날씨 Mockup / 조건부 렌더링(기온 구간 라벨) — 완성 앱에서는 4단계로 확장
+// — 날씨 Mockup / 조건부 렌더링(기온 구간 라벨) — 완성 앱에서는 4단계로 확장
 const comfortOf = (celsius) => {
   if (celsius < 10) return { key: 'cold', label: '추움' }
   if (celsius < 20) return { key: 'cool', label: '선선함' }

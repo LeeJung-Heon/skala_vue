@@ -1,6 +1,6 @@
 <script setup>
 /**
- * [실습] 과제 — Router 활용 / WeatherAboutView
+ * — Router 활용 / WeatherAboutView
  * - 앱 소개 내용 작성
  * - 메인 대시보드로 돌아가기 (router.push WeatherHome)
  */
@@ -35,7 +35,7 @@ const stack = [
 ]
 
 const handleGoHome = () => {
-  // [실습] 메인 대시보드로 돌아가기
+  // 메인 대시보드로 돌아가기
   router.push({ name: 'WeatherHome' })
 }
 </script>

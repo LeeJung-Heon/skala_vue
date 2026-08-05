@@ -1,15 +1,15 @@
 <script setup>
 /**
- * [실습] 과제 — 날씨 (컴포넌트) / 시간대별 기상 상태
+ * — 날씨 (컴포넌트) / 시간대별 기상 상태
  * - 3시간 간격 5구간의 아이콘 · 기상 문구 · 기온
- * - 메인의 CityInsightCard(기상 탭)와 상세 페이지가 함께 씁니다
- */
+ * - 메인의 CityInsightCard(기상 탭)와 상세 페이지가 함께 씀
+ *
 import WeatherIcon from '@/components/weather/WeatherIcon.vue'
 import { useConfigStore } from '@/stores/configStore'
 
 defineProps({
   hourly: { type: Array, default: () => [] },
-  /** 아이콘 크기(px) — 상세 페이지에서는 더 크게 씁니다 */
+  /** 아이콘 크기(px) — 상세 페이지에서는 더 크게 씀*/
   iconSize: { type: Number, default: 44 },
 })
 

@@ -1,5 +1,5 @@
 /**
- * [실습] 과제 — Store 활용 / stores/configStore.js
+ * — Store 활용 / stores/configStore.js
  * - state · unit — 온도 단위 (초기값: celsius)
  * - getters · unitSymbol — 현재 단위 기호 (℃ / ℉)
  * - actions · toggleUnit — celsius ↔ fahrenheit 토글
@@ -11,15 +11,15 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useConfigStore = defineStore('config', () => {
-  // [실습] state · unit
+  // state · unit
   const unit = ref('celsius')
 
-  // [실습] getters · unitSymbol
+  // getters · unitSymbol
   const unitSymbol = computed(() => {
     return unit.value === 'celsius' ? '℃' : '℉'
   })
 
-  // [실습] actions · toggleUnit
+  // actions · toggleUnit
   function toggleUnit() {
     unit.value = unit.value === 'celsius' ? 'fahrenheit' : 'celsius'
   }
@@ -35,7 +35,7 @@ export const useConfigStore = defineStore('config', () => {
     return Math.round(celsius)
   }
 
-  // 온도 '차이'(일교차 등)는 오프셋(+32) 없이 배율만 적용합니다
+  // 온도 '차이'(일교차 등)는 오프셋(+32) 없이 배율만 적용
   function toDisplayTempDelta(celsiusDelta) {
     if (unit.value === 'fahrenheit') return Math.round(celsiusDelta * (9 / 5))
     return Math.round(celsiusDelta)

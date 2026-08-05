@@ -1,8 +1,7 @@
 name: Deploy to GitHub Pages
 
-# [실습] 과제 — 완성
-# Build 후 정적 파일(dist)을 GitHub Pages 에 올려 Node.js 없이 호스팅합니다.
-# API 키는 Actions Secret(VITE_OPENWEATHER_API_KEY)으로 빌드 시 주입합니다.
+# Build 후 정적 파일(dist)을 GitHub Pages 에 올려 Node.js 없이 호스팅
+# API 키는 Actions Secret(VITE_OPENWEATHER_API_KEY)으로 빌드 시 주입
 
 on:
   push:

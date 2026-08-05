@@ -1,11 +1,11 @@
 <script setup>
 /**
- * [실습] 과제 — Router 활용 / Navigation Bar (RouterLink)
- * [실습] 과제 — Store 활용 / UnitToggler 역할
+ * — Router 활용 / Navigation Bar (RouterLink)
+ * — Store 활용 / UnitToggler 역할
  * - Navigation 옆에 ℃ / ℉ 단위 스위치 배치
  * - configStore.setUnit 으로 전역 단위 변경 → 메인·상세 기온 표기에 반영
  *
- * [실습] 과제 — 날씨 (컴포넌트) / 셸·슬롯 역할
+ * — 날씨 (컴포넌트) / 셸·슬롯 역할
  * - WeatherAppShell 이 공통 레이아웃을 담당하고 <slot> 으로 페이지 본문을 받음
  */
 import { useConfigStore } from '@/stores/configStore'
@@ -24,7 +24,7 @@ const scrollPageToTop = () => {
   document.body.scrollTo?.({ top: 0, behavior: 'smooth' })
 }
 
-/** 링크·버튼이 아닌 상단바 영역을 탭하면 맨 위로 이동합니다 */
+/** 링크·버튼이 아닌 상단바 영역을 탭하면 맨 위로 이동 */
 const onAppBarClick = (event) => {
   if (event.target.closest('a, button, .unit-switch')) return
   scrollPageToTop()
@@ -39,14 +39,14 @@ const onAppBarClick = (event) => {
         <span class="wordmark-sub">Weather</span>
       </RouterLink>
 
-      <!-- [실습] 과제 — Router 활용 · 과제 확장 / Navigation Bar (RouterLink) -->
+      <!-- Router 활용 · 과제 확장 / Navigation Bar (RouterLink) -->
       <nav class="app-nav" aria-label="완성 앱 메뉴">
         <RouterLink to="/weather" class="nav-pill">대시보드</RouterLink>
         <RouterLink to="/weather/about" class="nav-pill">소개</RouterLink>
       </nav>
 
       <div class="app-bar-right">
-        <!-- [실습] 과제 — Store 활용 / UnitToggler UI (Navigation 옆) -->
+        <!-- Store 활용 / UnitToggler UI (Navigation 옆) -->
         <div class="unit-switch" role="group" aria-label="온도 단위">
           <button
             type="button"
@@ -77,7 +77,7 @@ const onAppBarClick = (event) => {
         <p v-if="description" class="app-desc">{{ description }}</p>
       </div>
 
-      <!-- [실습] 과제 — 날씨 (컴포넌트) / slot 으로 페이지 본문 배치 -->
+      <!-- 날씨 (컴포넌트) / slot 으로 페이지 본문 배치 -->
       <slot />
     </div>
   </div>
@@ -85,7 +85,6 @@ const onAppBarClick = (event) => {
 
 <style scoped>
 .weather-app {
-  /* 완성 앱 전용 팔레트 — 실습 워크스페이스의 그레이스케일과 분리된 톤 */
   --w-bg: #0d1017;
   --w-panel: rgba(255, 255, 255, 0.055);
   --w-panel-strong: rgba(255, 255, 255, 0.09);
@@ -101,7 +100,7 @@ const onAppBarClick = (event) => {
   --w-pad-y: clamp(20px, 3.5vw, 34px);
   --w-bar-pad-y: clamp(12px, 2vw, 18px);
 
-  /* 날씨 아이콘 색 — WeatherIcon / weather-icons.css 가 참조합니다 */
+  /* 날씨 아이콘 색 — WeatherIcon / weather-icons.css 가 참조 */
   --w-icon-sun: #ffc27a;
   --w-icon-cloud: #ffffff;
   --w-icon-rain: #5fb0ff;

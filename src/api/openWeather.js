@@ -1,12 +1,12 @@
 /**
- * [실습] 과제 — 날씨 데이터 연동 (Axios)
+ * 날씨 데이터 연동 (Axios)
  * - Axios 로 OpenWeatherMap API 호출
  * - API Key 는 환경 변수 VITE_OPENWEATHER_API_KEY 로만 주입 (코드·Git 에 하드코딩 금지)
  *
- * [실습] 과제 — 과제 확장
+ * 과제 확장
  * - Geocoding / Current Weather / 5 Day Forecast 등 활용 API 를 조합
  *
- * [실습] 과제 — 완성
+ * 과제 — 완성
  * - API 키는 환경 변수로 조정하고 Git 에 업로드되지 않도록 함 (.env + .gitignore)
  */
 import axios from 'axios'
@@ -17,7 +17,7 @@ const WEATHER_URL = `${BASE}/data/2.5/weather`
 const FORECAST_URL = `${BASE}/data/2.5/forecast`
 
 const getApiKey = () => {
-  // [실습] 과제 — 완성 / API 키 환경 변수
+  // 과제 — 완성 / API 키 환경 변수
   const key = import.meta.env.VITE_OPENWEATHER_API_KEY
   if (!key) {
     throw new Error(
@@ -28,7 +28,7 @@ const getApiKey = () => {
 }
 
 /**
- * [실습] 과제 — 과제 확장 / Geocoding API — 도시명 → 위도·경도
+ * 과제 — 과제 확장 / Geocoding API — 도시명 → 위도·경도
  * @see https://ds31x.tistory.com/509
  */
 export async function getCoordinates(cityName, { countryCode = '', limit = 1 } = {}) {
@@ -55,7 +55,7 @@ export async function getCoordinates(cityName, { countryCode = '', limit = 1 } =
   }))
 }
 
-/** [실습] 과제 — 날씨 데이터 연동 / Current Weather Data API */
+/** 과제 — 날씨 데이터 연동 / Current Weather Data API */
 export async function getCurrentWeather(lat, lon) {
   const { data } = await axios.get(WEATHER_URL, {
     params: {
@@ -69,7 +69,7 @@ export async function getCurrentWeather(lat, lon) {
   return data
 }
 
-/** [실습] 과제 — 과제 확장 / 5 Day · 3 Hour Forecast API */
+/** 과제 — 과제 확장 / 5 Day · 3 Hour Forecast API */
 export async function getWeatherForecast(lat, lon) {
   const { data } = await axios.get(FORECAST_URL, {
     params: {
@@ -84,7 +84,7 @@ export async function getWeatherForecast(lat, lon) {
 }
 
 /**
- * 좌표가 없으면 Geocoding으로 보완한 뒤 현재 날씨 + 예보를 함께 가져옵니다.
+  * 좌표가 없으면 Geocoding으로 보완한 뒤 현재 날씨 + 예보를 함께 가져옴
  */
 export async function fetchCityWeatherBundle({ lat, lon, queryName, countryCode = 'KR' }) {
   let resolvedLat = lat

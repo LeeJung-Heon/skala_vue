@@ -1,8 +1,8 @@
 <script setup>
 /**
- * [실습] 과제 — Router 활용 / App.vue
+ *  Router 활용 / App.vue
  * - 메인 콘텐츠 영역(RouterView) 배치
- * - (완성 앱) 상단 Navigation 은 WeatherAppShell 로 이동해 날씨 UI 와 함께 둡니다.
+ * - (완성 앱) 상단 Navigation 은 WeatherAppShell 로 이동해 날씨 UI 와 함께 둠.
  */
 </script>
 
@@ -21,7 +21,7 @@
 
 <style scoped>
 .app-shell {
-  /* 문서(window) 스크롤을 사용해 iOS 상단 상태바 탭 → 맨 위 이동이 동작하게 합니다 */
+  /* 문서(window) 스크롤을 사용해 iOS 상단 상태바 탭 → 맨 위 이동 동작 */
   min-height: 100vh;
   min-height: 100svh;
   overflow: visible;

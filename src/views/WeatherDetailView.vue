@@ -1,12 +1,12 @@
 <script setup>
 /**
- * [실습] 과제 — Router 활용 / WeatherDetailView
+ * — Router 활용 / WeatherDetailView
  * - 동적 경로의 cityId 로 Mount(immediate watch) 시점에 도시 데이터 선택
  *
- * [실습] 과제 — Store 활용
+ * — Store 활용
  * - configStore 단위 환산이 상세 지표에도 동일 적용
  *
- * [실습] 과제 — 날씨 데이터 연동
+ * — 날씨 데이터 연동
  * - Mock 대신 weatherStore(OpenWeather 응답)에서 도시 객체 조회
  */
 import { ref, computed, watch } from 'vue'
@@ -57,7 +57,7 @@ const loadCity = async (cityId) => {
   }
 }
 
-// [실습] cityId 변경 시(마운트 포함) 해당 도시 데이터 로드
+// cityId 변경 시(마운트 포함) 해당 도시 데이터 로드
 watch(
   () => route.params.cityId,
   (cityId) => {
@@ -76,7 +76,7 @@ const hourlyBars = computed(() => {
 
 const bandLegend = bandLegendItems()
 
-/** 가시거리(m) → 사람이 읽는 문구. OpenWeather 는 10km 에서 값이 잘립니다. */
+/** 가시거리(m) → 사람이 읽는 문구. OpenWeather 는 10km 에서 값이 잘림*/
 const visibilityLabel = (meters) => {
   if (meters == null) return '정보 없음'
   if (meters >= 10000) return '10km 이상'
@@ -84,14 +84,14 @@ const visibilityLabel = (meters) => {
   return `${meters}m`
 }
 
-/** 현재 강수량 — 비/눈 중 값이 있는 쪽을 보여줍니다. */
+/** 현재 강수량 — 비/눈 중 값이 있는 쪽을 보여줌 */
 const precipLabel = (target) => {
   if (target.snowAmount > 0) return `눈 ${target.snowAmount}mm`
   if (target.rainAmount > 0) return `비 ${target.rainAmount}mm`
   return '없음'
 }
 
-// [실습] 과제 확장 / 상세 관측 지표 — 기온·바람 계열 (시간대별 기상 상태 위)
+// 상세 관측 지표 — 기온·바람 계열 (시간대별 기상 상태 위)
 const climateMetrics = computed(() => {
   if (!city.value) return []
   const target = city.value
@@ -123,7 +123,7 @@ const climateMetrics = computed(() => {
   ]
 })
 
-// [실습] 과제 확장 / 강수·대기 계열 (시간대별 기상 상태 아래)
+// 강수·대기 계열 (시간대별 기상 상태 아래)
 const skyMetrics = computed(() => {
   if (!city.value) return []
   const target = city.value
@@ -172,7 +172,7 @@ const skyMetrics = computed(() => {
         </div>
       </section>
 
-      <!-- [실습] 과제 확장 / 시간대별 기상 상태 -->
+      <!-- 시간대별 기상 상태 -->
       <section class="panel-section">
         
         <HourlySkyStrip :hourly="city.hourly" :icon-size="48" />
@@ -187,7 +187,7 @@ const skyMetrics = computed(() => {
         </div>
       </section>
 
-      <!-- [실습] 과제 확장 / 일출 & 일몰 -->
+      <!-- 일출 & 일몰 -->
       <section class="panel-section">
         <SunArcPanel :city="city" />
       </section>
@@ -349,7 +349,7 @@ const skyMetrics = computed(() => {
   color: var(--w-faint);
 }
 
-/* [실습] 과제 확장 / 기상 상태 · 일출 일몰 섹션 */
+/* 기상 상태 · 일출 일몰 섹션 */
 .panel-section {
   margin-top: 18px;
   padding: 22px 24px;
@@ -485,7 +485,7 @@ const skyMetrics = computed(() => {
 }
 
 @media (max-width: 720px) {
-  /* 기온 블록을 옆에 유지한 채 텍스트 줄 높이에 맞춰 카드를 낮춥니다 */
+  /* 기온 블록을 옆에 유지한 채 텍스트 줄 높이에 맞춰 카드를 낮춤 */
   .detail-hero {
     gap: 12px;
     padding: 18px 16px;
@@ -518,7 +518,7 @@ const skyMetrics = computed(() => {
     font-size: 15px;
   }
 
-  /* WeatherIcon 은 size prop 을 인라인 스타일로 넣어 !important 로만 덮을 수 있습니다 */
+  /* WeatherIcon 은 size prop 을 인라인 스타일로 넣어 !important 로만 덮을 수 있음 */
   .detail-icon {
     width: 30px !important;
     height: 30px !important;

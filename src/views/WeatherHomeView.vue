@@ -1,16 +1,16 @@
 <script setup>
 /**
- * [실습] 과제 — Router 활용 / WeatherHomeView
+ * — Router 활용 / WeatherHomeView
  * - WeatherParent 역할을 뷰가 담당
  * - 상세보기: alert 대신 router.push(`/weather/${id}`)
  *
- * [실습] 과제 — 날씨 (컴포지션)
+ * — 날씨 (컴포지션)
  * - 반응형 상태: searchQuery · cities(스토어) · selectedCityId
  * - computed: listedCities — 검색어로 도시 목록 필터
  * - watch: searchQuery — 타이핑 시 쿼리 동기화 · 원격 검색
  * - 검색 결과 표시: 일치 목록 / 빈 검색어면 전체 / 없으면 안내 문구
  *
- * [실습] 과제 — 날씨 (컴포넌트)
+ * — 날씨 (컴포넌트)
  * - CitySearchField · CityTile · WeatherAppShell 로 분리 (props / emits)
  */
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
@@ -38,7 +38,7 @@ const weatherStore = useWeatherStore()
 const { cities, status, error, isLoading, adding, addError, selectedCityId, selectedCity } =
   storeToRefs(weatherStore)
 
-// [실습] 과제 — 날씨 (컴포지션) / 반응형 상태 · searchQuery
+// — 날씨 (컴포지션) / 반응형 상태 · searchQuery
 const searchQuery = ref('')
 const remoteLocations = ref([])
 const searchingRemote = ref(false)
@@ -57,7 +57,7 @@ onBeforeUnmount(() => {
   if (searchTimer) clearTimeout(searchTimer)
 })
 
-// [실습] 과제 — 날씨 (컴포지션) / watch 로 searchQuery 감시 (쿼리 동기화 · API 검색)
+// — 날씨 (컴포지션) / watch 로 searchQuery 감시 (쿼리 동기화 · API 검색)
 watch(searchQuery, (newQuery) => {
   const nextQuery = newQuery || undefined
   const currentQuery = Array.isArray(route.query.search)
@@ -73,7 +73,7 @@ watch(searchQuery, (newQuery) => {
   if (searchTimer) clearTimeout(searchTimer)
   const trimmed = newQuery.trim()
 
-  // 1글자(한글 조합 중간값 포함)부터 원격 후보를 갱신합니다.
+  // 1글자(한글 조합 중간값 포함)부터 원격 후보를 갱신
   if (!trimmed) {
     remoteLocations.value = []
     searchingRemote.value = false
@@ -116,7 +116,7 @@ const matchesQuery = (city, query) => {
   )
 }
 
-// [실습] 과제 — 날씨 (컴포지션) / computed — 검색어가 포함된 도시만 필터 (listedCities)
+// 날씨 (컴포지션) / computed — 검색어가 포함된 도시만 필터 (listedCities)
 const listedCities = computed(() => {
   const query = searchQuery.value.trim()
   if (!query) return cities.value
@@ -154,13 +154,13 @@ const suggestions = computed(() => {
 })
 
 const handleDetailJump = (id) => {
-  // [실습] 과제 — Router 활용 / 상세보기: alert 대신 router.push
+  // — Router 활용 / 상세보기: alert 대신 router.push
   weatherStore.selectCity(id)
   router.push(`/weather/${id}`)
 }
 
 const handleMapJump = (id) => {
-  // [실습] 과제 — Router 활용 / 지도 보기: /weather/:cityId/map
+  // — Router 활용 / 지도 보기: /weather/:cityId/map
   weatherStore.selectCity(id)
   router.push({ name: 'CityMap', params: { cityId: id } })
 }
@@ -246,7 +246,7 @@ watch(selectedCityId, (id, prevId) => {
               <p class="hero-region">{{ selectedCity.region }}</p>
             </div>
 
-            <!-- [실습] 과제 — Router 활용 / 지도 아이콘 → /weather/:cityId/map 로 이동 -->
+            <!-- Router 활용 / 지도 아이콘 → /weather/:cityId/map 로 이동 -->
             <button
               type="button"
               class="hero-map-btn"
@@ -302,7 +302,7 @@ watch(selectedCityId, (id, prevId) => {
         </div>
 
         <!--
-          [실습] 과제 — 날씨 (컴포넌트) / 히어로 우측 카드 → CityInsightCard
+          - 날씨 (컴포넌트) / 히어로 우측 카드 → CityInsightCard
           기온 · 기상 상태 · 일출&일몰 세 패널을 탭으로 스위칭
         -->
         <CityInsightCard :city="selectedCity" />
@@ -323,15 +323,15 @@ watch(selectedCityId, (id, prevId) => {
             @select-existing="handleSelectExisting"
           />
           <!--
-            [실습] 과제 — 날씨 (컴포넌트) / SearchBar 역할 → CitySearchField
+            — 날씨 (컴포넌트) / SearchBar 역할 → CitySearchField
             props 로 검색어·결과 수신, update-query · select-existing emits
           -->
         </header>
 
         <div v-if="listedCities.length" class="city-grid">
           <!--
-            [실습] 과제 — 날씨 Mockup / 배열 렌더링 (v-for) · :key 에 id 바인딩
-            [실습] 과제 — 날씨 (컴포넌트) / WeatherCard 역할 → CityTile (props · select · detail emits)
+             — 날씨 Mockup / 배열 렌더링 (v-for) · :key 에 id 바인딩
+             — 날씨 (컴포넌트) / WeatherCard 역할 → CityTile (props · select · detail emits)
           -->
           <CityTile
             v-for="city in listedCities"
@@ -343,7 +343,7 @@ watch(selectedCityId, (id, prevId) => {
             @remove="handleRemoveCity"
           />
         </div>
-        <!-- [실습] 과제 — 날씨 (컴포지션) / 검색 결과 없음 안내 -->
+        <!-- 날씨 (컴포지션) / 검색 결과 없음 안내 -->
         <p v-else class="list-empty">
           <template v-if="searchQuery.trim()">
             “{{ searchQuery }}” 와 일치하는 도시가 없습니다. 위 검색 결과에서 추가해 보세요.

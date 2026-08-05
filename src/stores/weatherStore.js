@@ -1,6 +1,6 @@
 /**
- * [실습] 과제 — 날씨 데이터 연동 / Mock → OpenWeather 응답으로 교체한 도시 목록 스토어
- * [실습] 과제 — 과제 확장 / 도시 검색·추가·삭제 등 API·상태 확장
+ * 날씨 데이터 연동 / Mock → OpenWeather 응답으로 교체한 도시 목록 스토어
+ * 도시 검색·추가·삭제 등 API·상태 확장
  */
 import { defineStore } from 'pinia'
 import { fetchCityWeatherBundle, getCoordinates } from '@/api/openWeather'
@@ -155,7 +155,7 @@ export const useWeatherStore = defineStore('weather', {
       return this.cities.some((city) => samePlace(city, location))
     },
 
-    /** 검색 결과 위치를 목록에 추가하고 날씨를 불러옵니다. */
+    /** 검색 결과 위치를 목록에 추가하고 날씨를 불러옴*/
     async addCityFromLocation(location) {
       if (this.hasPlace(location)) {
         const existing = this.cities.find((city) => samePlace(city, location))
@@ -167,7 +167,7 @@ export const useWeatherStore = defineStore('weather', {
       this.addError = null
 
       try {
-        // 기본 디렉터리에서 지웠던 도시를 다시 추가하면 복구합니다.
+        // 기본 디렉터리에서 지웠던 도시를 다시 추가하면 복구함
         const directoryHit = weatherCityDirectory.find((meta) => samePlace(meta, location))
         let meta = directoryHit
           ? { ...directoryHit, custom: false }
