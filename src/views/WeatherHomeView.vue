@@ -169,6 +169,12 @@ const handleDetailJump = (id) => {
   router.push(`/weather/${id}`)
 }
 
+const handleMapJump = (id) => {
+  // [실습] 과제 — Router 활용 / 지도 보기: /weather/:cityId/map
+  weatherStore.selectCity(id)
+  router.push({ name: 'CityMap', params: { cityId: id } })
+}
+
 const handleRetry = () => {
   weatherStore.fetchAll({ force: true })
 }
@@ -243,10 +249,32 @@ watch(selectedCityId, (id, prevId) => {
     <template v-else-if="selectedCity">
       <section class="hero">
         <div class="hero-main">
-          <div class="hero-identity">
-            <p class="hero-label">현재 관측</p>
-            <h2 class="hero-city">{{ selectedCity.name }}</h2>
-            <p class="hero-region">{{ selectedCity.region }}</p>
+          <div class="hero-top">
+            <div class="hero-identity">
+              <p class="hero-label">현재 관측</p>
+              <h2 class="hero-city">{{ selectedCity.name }}</h2>
+              <p class="hero-region">{{ selectedCity.region }}</p>
+            </div>
+
+            <!-- [실습] 과제 — Router 활용 / 지도 아이콘 → /weather/:cityId/map 로 이동 -->
+            <button
+              type="button"
+              class="hero-map-btn"
+              :title="`${selectedCity.name} 위치 지도에서 보기`"
+              :aria-label="`${selectedCity.name} 위치 지도에서 보기`"
+              @click="handleMapJump(selectedCity.id)"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  d="M12 21s7-5.686 7-11a7 7 0 1 0-14 0c0 5.314 7 11 7 11Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linejoin="round"
+                />
+                <circle cx="12" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8" />
+              </svg>
+            </button>
           </div>
 
           <div class="hero-temp">
@@ -388,10 +416,48 @@ watch(selectedCityId, (id, prevId) => {
   box-sizing: border-box;
 }
 
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
 .hero-identity {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
+}
+
+.hero-map-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  color: var(--w-muted);
+  background: var(--w-panel);
+  border: 1px solid var(--w-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.hero-map-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.hero-map-btn:not(:disabled):hover {
+  color: #0d1017;
+  background: var(--w-accent);
+  border-color: var(--w-accent);
 }
 
 .hero-label {
@@ -631,6 +697,17 @@ watch(selectedCityId, (id, prevId) => {
 
   .hero-city {
     font-size: 20px;
+  }
+
+  .hero-map-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+
+  .hero-map-btn svg {
+    width: 17px;
+    height: 17px;
   }
 
   .hero-region {

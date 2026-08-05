@@ -26,6 +26,13 @@ const routes = [
     meta: { title: '소개' },
   },
   {
+    // [실습] 과제 — Router 활용 / CityMapView — 도시 위치를 3D 지도 마커로 표시
+    path: '/weather/:cityId/map',
+    name: 'CityMap',
+    component: () => import('@/views/CityMapView.vue'),
+    meta: { title: '위치 보기' },
+  },
+  {
     // [실습] 과제 — Router 활용 / WeatherDetailView — 동적 경로 cityId
     path: '/weather/:cityId',
     name: 'WeatherDetail',
