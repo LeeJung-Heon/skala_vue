@@ -155,7 +155,7 @@ const hourlyBars = computed(() => {
 }
 
 /* 세 패널이 같은 높이를 써서 탭을 바꿔도 카드 크기가 변하지 않음 */
-.panel 음
+.panel {
   flex: 1;
   min-height: clamp(160px, 20vh, 200px);
 }
