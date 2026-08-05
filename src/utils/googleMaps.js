@@ -59,8 +59,11 @@ const bootstrapMapsApi = () => {
   return bootstrapPromise
 }
 
-/** maps3d 라이브러리(Map3DElement · Marker3DElement)를 로드합니다. */
-export const loadMaps3d = async () => {
+/** Maps JS API 의 개별 라이브러리를 로드합니다. */
+export const loadMapsLibrary = async (name) => {
   const maps = await bootstrapMapsApi()
-  return maps.importLibrary('maps3d')
+  return maps.importLibrary(name)
 }
+
+/** maps3d 라이브러리(Map3DElement · Marker3DElement)를 로드합니다. */
+export const loadMaps3d = () => loadMapsLibrary('maps3d')
