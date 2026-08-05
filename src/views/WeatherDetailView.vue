@@ -14,6 +14,8 @@ import { useRoute, useRouter } from 'vue-router'
 
 import WeatherAppShell from '@/components/weather/WeatherAppShell.vue'
 import WeatherIcon from '@/components/weather/WeatherIcon.vue'
+import HourlySkyStrip from '@/components/weather/HourlySkyStrip.vue'
+import SunArcPanel from '@/components/weather/SunArcPanel.vue'
 import { useConfigStore } from '@/stores/configStore'
 import { useWeatherStore } from '@/stores/weatherStore'
 import { bandLegendItems, barFillStyle } from '@/utils/tempBands'
@@ -74,18 +76,63 @@ const hourlyBars = computed(() => {
 
 const bandLegend = bandLegendItems()
 
-const metrics = computed(() => {
+/** 가시거리(m) → 사람이 읽는 문구. OpenWeather 는 10km 에서 값이 잘립니다. */
+const visibilityLabel = (meters) => {
+  if (meters == null) return '정보 없음'
+  if (meters >= 10000) return '10km 이상'
+  if (meters >= 1000) return `${(meters / 1000).toFixed(1)}km`
+  return `${meters}m`
+}
+
+/** 현재 강수량 — 비/눈 중 값이 있는 쪽을 보여줍니다. */
+const precipLabel = (target) => {
+  if (target.snowAmount > 0) return `눈 ${target.snowAmount}mm`
+  if (target.rainAmount > 0) return `비 ${target.rainAmount}mm`
+  return '없음'
+}
+
+// [실습] 과제 확장 / 상세 관측 지표 — 기온·바람 계열 (시간대별 기상 상태 위)
+const climateMetrics = computed(() => {
   if (!city.value) return []
+  const target = city.value
+  const unit = config.unitSymbol
+
   return [
-    { label: '체감 기온', value: `${config.toDisplayTemp(city.value.feels)}${config.unitSymbol}` },
+    { label: '체감 기온', value: `${config.toDisplayTemp(target.feels)}${unit}` },
     {
       label: '최고 / 최저',
-      value: `${config.toDisplayTemp(city.value.high)}° / ${config.toDisplayTemp(city.value.low)}°`,
+      value: `${config.toDisplayTemp(target.high)}° / ${config.toDisplayTemp(target.low)}°`,
     },
-    { label: '대기 습도', value: `${city.value.humidity}%` },
-    { label: '현재 풍속', value: `${city.value.wind}m/s` },
-    { label: '강수 확률', value: `${city.value.rain}%` },
-    { label: '기상 현황', value: city.value.status },
+    {
+      label: '일교차',
+      value: `${config.toDisplayTempDelta(target.tempRange)}${unit}`,
+      hint: '앞으로 24시간',
+    },
+    { label: '대기 습도', value: `${target.humidity}%` },
+    {
+      label: '바람',
+      value: target.windDirection
+        ? `${target.windDirection} ${target.wind}m/s`
+        : `${target.wind}m/s`,
+      hint: target.windDeg != null ? `풍향 ${Math.round(target.windDeg)}°` : '',
+    },
+    {
+      label: '돌풍',
+      value: target.windGust != null ? `${target.windGust}m/s` : '없음',
+    },
+  ]
+})
+
+// [실습] 과제 확장 / 강수·대기 계열 (시간대별 기상 상태 아래)
+const skyMetrics = computed(() => {
+  if (!city.value) return []
+  const target = city.value
+
+  return [
+    { label: '강수 확률', value: `${target.rain}%` },
+    { label: '강수량', value: precipLabel(target), hint: '최근 1시간' },
+    { label: '구름량', value: target.clouds != null ? `${target.clouds}%` : '정보 없음' },
+    { label: '가시거리', value: visibilityLabel(target.visibility) },
   ]
 })
 </script>
@@ -103,6 +150,7 @@ const metrics = computed(() => {
     </div>
 
     <template v-else-if="city">
+      <!-- 첫 카드에 지역·도시·기상 현황·기온을 한 번에 -->
       <section class="detail-hero">
         <div>
           <p class="detail-region">{{ city.region }}</p>
@@ -115,11 +163,33 @@ const metrics = computed(() => {
         </p>
       </section>
 
+      <!-- 기온 · 바람 계열 -->
       <section class="metric-grid" aria-label="상세 관측 지표">
-        <div v-for="metric in metrics" :key="metric.label" class="metric">
+        <div v-for="metric in climateMetrics" :key="metric.label" class="metric">
           <span>{{ metric.label }}</span>
           <strong>{{ metric.value }}</strong>
+          <em v-if="metric.hint">{{ metric.hint }}</em>
         </div>
+      </section>
+
+      <!-- [실습] 과제 확장 / 시간대별 기상 상태 -->
+      <section class="panel-section">
+        
+        <HourlySkyStrip :hourly="city.hourly" :icon-size="48" />
+      </section>
+
+      <!-- 강수 · 대기 계열 -->
+      <section class="metric-grid metric-grid-4" aria-label="강수 · 대기 지표">
+        <div v-for="metric in skyMetrics" :key="metric.label" class="metric">
+          <span>{{ metric.label }}</span>
+          <strong>{{ metric.value }}</strong>
+          <em v-if="metric.hint">{{ metric.hint }}</em>
+        </div>
+      </section>
+
+      <!-- [실습] 과제 확장 / 일출 & 일몰 -->
+      <section class="panel-section">
+        <SunArcPanel :city="city" />
       </section>
 
       <section class="timeline">
@@ -246,6 +316,11 @@ const metrics = computed(() => {
   margin-top: 18px;
 }
 
+/* 강수·대기 4개는 한 줄에 나란히 */
+.metric-grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .metric {
   display: flex;
   flex-direction: column;
@@ -265,6 +340,31 @@ const metrics = computed(() => {
   font-size: 17px;
   font-weight: 700;
   color: var(--w-text);
+}
+
+.metric em {
+  margin-top: -2px;
+  font-size: 11px;
+  font-style: normal;
+  color: var(--w-faint);
+}
+
+/* [실습] 과제 확장 / 기상 상태 · 일출 일몰 섹션 */
+.panel-section {
+  margin-top: 18px;
+  padding: 22px 24px;
+  border: 1px solid var(--w-border);
+  border-radius: var(--w-radius);
+  background: var(--w-panel);
+}
+
+.section-title {
+  margin: 0 0 16px;
+  padding: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--w-muted);
+  border: 0;
 }
 
 .timeline {
@@ -383,8 +483,29 @@ const metrics = computed(() => {
     align-items: flex-start;
   }
 
-  .metric-grid {
+  .metric-grid,
+  .metric-grid-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .metric {
+    padding: 13px 14px;
+    gap: 6px;
+  }
+
+  .metric strong {
+    font-size: 15.5px;
+  }
+
+  .panel-section {
+    padding: 18px 16px;
+  }
+
+  .section-title {
+    margin-bottom: 12px;
+    font-size: 11.5px;
   }
 }
 </style>

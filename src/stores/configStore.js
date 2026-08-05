@@ -35,11 +35,18 @@ export const useConfigStore = defineStore('config', () => {
     return Math.round(celsius)
   }
 
+  // 온도 '차이'(일교차 등)는 오프셋(+32) 없이 배율만 적용합니다
+  function toDisplayTempDelta(celsiusDelta) {
+    if (unit.value === 'fahrenheit') return Math.round(celsiusDelta * (9 / 5))
+    return Math.round(celsiusDelta)
+  }
+
   return {
     unit,
     unitSymbol,
     toggleUnit,
     setUnit,
     toDisplayTemp,
+    toDisplayTempDelta,
   }
 })

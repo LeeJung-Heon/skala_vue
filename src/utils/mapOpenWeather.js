@@ -126,6 +126,30 @@ const hourLabelFromUnix = (unixSec, timezoneOffsetSec = 0) => {
   return `${String(hour).padStart(2, '0')}시`
 }
 
+/** 풍향(도) → 8방위 한글 라벨 (0° = 북, 시계방향) */
+const WIND_DIRECTIONS = ['북', '북동', '동', '남동', '남', '남서', '서', '북서']
+
+export const windDirectionLabel = (deg) => {
+  if (deg == null || Number.isNaN(Number(deg))) return ''
+  const index = Math.round(Number(deg) / 45) % 8
+  return WIND_DIRECTIONS[index]
+}
+
+/** rain/snow 버킷에서 강수량(mm)을 꺼냅니다. 1h 우선, 없으면 3h */
+const precipAmount = (bucket) => {
+  if (!bucket) return 0
+  return Number(bucket['1h'] ?? bucket['3h'] ?? 0)
+}
+
+/** Unix 시각 + 도시 timezone(초) → 현지 HH:MM 라벨 */
+export const localTimeLabel = (unixSec, timezoneOffsetSec = 0) => {
+  if (unixSec == null) return '--:--'
+  const local = new Date((Number(unixSec) + Number(timezoneOffsetSec)) * 1000)
+  const hh = String(local.getUTCHours()).padStart(2, '0')
+  const mm = String(local.getUTCMinutes()).padStart(2, '0')
+  return `${hh}:${mm}`
+}
+
 /** targetUnix 에 가장 가까운 예보 항목 */
 const nearestForecast = (list, targetUnix) => {
   if (!list.length) return null
@@ -148,12 +172,8 @@ const nearestForecast = (list, targetUnix) => {
  * 한국 오후 3시에도 첫 항목이 UTC 09:00(=KST 18시)인 경우가 많습니다.
  * 그래서 첫 칸은 현재 관측 기온을 쓰고, 이후는 목표 시각에 가장 가까운 예보를 매칭합니다.
  */
-export function mapHourlyFromForecast(
-  list = [],
-  count = 5,
-  timezoneOffsetSec = 0,
-  currentTemp = null,
-) {
+export function mapHourlyFromForecast(list = [], count = 5, timezoneOffsetSec = 0, current = null) {
+  const currentTemp = current?.main?.temp
   if (!list.length && currentTemp == null) return []
 
   const nowSec = Math.floor(Date.now() / 1000)
@@ -164,23 +184,21 @@ export function mapHourlyFromForecast(
     const targetSec = nowSec + i * stepSec
     const label = hourLabelFromUnix(targetSec, timezoneOffsetSec)
 
-    if (i === 0 && currentTemp != null && !Number.isNaN(Number(currentTemp))) {
-      points.push({
-        label,
-        temp: Math.round(Number(currentTemp)),
-        at: nowSec,
-        isNow: true,
-      })
-      continue
-    }
+    // 첫 칸은 현재 관측값, 이후는 목표 시각에 가장 가까운 예보
+    const source = i === 0 && currentTemp != null ? current : nearestForecast(list, targetSec)
+    if (!source) break
 
-    const match = nearestForecast(list, targetSec)
-    if (!match) break
+    const weather = source.weather?.[0] ?? {}
+    const wind = source.wind?.speed ?? 0
+
     points.push({
       label,
-      temp: Math.round(match.main.temp),
-      at: match.dt,
-      isNow: false,
+      temp: Math.round(Number(source.main.temp)),
+      at: source === current ? nowSec : source.dt,
+      isNow: source === current,
+      // [실습] 과제 확장 / 시간대별 기상 상태 패널용
+      icon: mapWeatherIcon(weather, wind),
+      status: mapWeatherStatus(weather, wind),
     })
   }
 
@@ -238,6 +256,22 @@ export function mapCityFromOpenWeather(meta, bundle) {
     humidity: current.main.humidity,
     wind: Number(wind.toFixed(1)),
     rain: mapRainChance(list),
-    hourly: mapHourlyFromForecast(list, 5, timezoneOffsetSec, current.main.temp),
+    hourly: mapHourlyFromForecast(list, 5, timezoneOffsetSec, current),
+
+    // [실습] 과제 확장 / 상세 관측 지표 — 응답에 이미 담겨 있던 값들
+    windDeg: current.wind?.deg ?? null,
+    windDirection: windDirectionLabel(current.wind?.deg),
+    windGust: current.wind?.gust != null ? Number(current.wind.gust.toFixed(1)) : null,
+    /** 가시거리(m) — 최대치는 10000 으로 잘려서 옵니다 */
+    visibility: current.visibility ?? null,
+    clouds: current.clouds?.all ?? null,
+    rainAmount: precipAmount(current.rain),
+    snowAmount: precipAmount(current.snow),
+    /** 일교차 — 앞으로 24시간 예보의 최고·최저 차 */
+    tempRange: high - low,
+
+    // [실습] 과제 확장 / 일출·일몰 패널용 (Unix 초, UTC 기준)
+    sunrise: current.sys?.sunrise ?? null,
+    sunset: current.sys?.sunset ?? null,
   }
 }

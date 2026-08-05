@@ -20,10 +20,10 @@ import { storeToRefs } from 'pinia'
 import WeatherAppShell from '@/components/weather/WeatherAppShell.vue'
 import CitySearchField from '@/components/weather/CitySearchField.vue'
 import CityTile from '@/components/weather/CityTile.vue'
+import CityInsightCard from '@/components/weather/CityInsightCard.vue'
 import WeatherIcon from '@/components/weather/WeatherIcon.vue'
 import { useConfigStore } from '@/stores/configStore'
 import { useWeatherStore } from '@/stores/weatherStore'
-import { barFillStyle } from '@/utils/tempBands'
 import {
   displayCityName,
   displayRegion,
@@ -151,16 +151,6 @@ const suggestions = computed(() => {
     }))
 
   return [...local, ...remote]
-})
-
-const hourlyBars = computed(() => {
-  if (!selectedCity.value?.hourly?.length) return []
-  const max = Math.max(...selectedCity.value.hourly.map((point) => point.temp))
-  return selectedCity.value.hourly.map((point) => ({
-    ...point,
-    style: barFillStyle(point.temp, 'vertical'),
-    peak: point.temp >= max,
-  }))
 })
 
 const handleDetailJump = (id) => {
@@ -311,18 +301,11 @@ watch(selectedCityId, (id, prevId) => {
           </div>
         </div>
 
-        <div class="hero-chart">
-          <p class="chart-title">시간대별 기온</p>
-          <div class="chart-bars">
-            <div v-for="point in hourlyBars" :key="point.label" class="chart-col">
-              <span class="chart-value" :class="{ peak: point.peak }">
-                {{ config.toDisplayTemp(point.temp) }}°
-              </span>
-              <div class="chart-bar" :class="{ peak: point.peak }" :style="point.style"></div>
-              <span class="chart-label">{{ point.label }}</span>
-            </div>
-          </div>
-        </div>
+        <!--
+          [실습] 과제 — 날씨 (컴포넌트) / 히어로 우측 카드 → CityInsightCard
+          기온 · 기상 상태 · 일출&일몰 세 패널을 탭으로 스위칭
+        -->
+        <CityInsightCard :city="selectedCity" />
       </section>
 
       <section class="list" aria-labelledby="city-list-title">
@@ -407,8 +390,7 @@ watch(selectedCityId, (id, prevId) => {
   margin-bottom: 34px;
 }
 
-.hero-main,
-.hero-chart {
+.hero-main {
   padding: 24px 26px;
   border: 1px solid var(--w-border);
   border-radius: var(--w-radius);
@@ -565,65 +547,6 @@ watch(selectedCityId, (id, prevId) => {
   border-color: var(--w-accent);
 }
 
-.chart-title {
-  margin: 0 0 18px;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--w-muted);
-}
-
-.chart-bars {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  align-items: end;
-  gap: 12px;
-  height: clamp(160px, 20vh, 200px);
-}
-
-.chart-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  height: 100%;
-  gap: 8px;
-}
-
-.chart-value {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--w-muted);
-}
-
-.chart-value.peak {
-  color: var(--w-text);
-}
-
-.chart-bar {
-  width: 100%;
-  min-height: 8px;
-  border-radius: 10px 10px 4px 4px;
-  transition:
-    height 0.28s ease,
-    background 0.28s ease;
-}
-
-.chart-bar.peak {
-  outline: 1px solid rgba(255, 255, 255, 0.22);
-  outline-offset: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .chart-bar {
-    transition: none;
-  }
-}
-
-.chart-label {
-  font-size: 11px;
-  color: var(--w-faint);
-}
-
 .list-head {
   position: relative;
   z-index: 30;
@@ -690,8 +613,7 @@ watch(selectedCityId, (id, prevId) => {
     margin-bottom: 26px;
   }
 
-  .hero-main,
-  .hero-chart {
+  .hero-main {
     padding: 18px 16px;
   }
 
@@ -748,28 +670,6 @@ watch(selectedCityId, (id, prevId) => {
   .hero-cta {
     padding: 8px 12px;
     font-size: 11.5px;
-  }
-
-  .chart-title {
-    margin-bottom: 14px;
-    font-size: 11px;
-  }
-
-  .chart-bars {
-    gap: 8px;
-    height: clamp(200px, 26vh, 260px);
-  }
-
-  .chart-col {
-    gap: 6px;
-  }
-
-  .chart-value {
-    font-size: 10.5px;
-  }
-
-  .chart-label {
-    font-size: 10px;
   }
 
   .city-grid {
