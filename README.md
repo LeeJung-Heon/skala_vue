@@ -36,6 +36,7 @@ OpenWeatherMap API를 연동한 Vue 3 날씨 대시보드
 | WeatherCard | `src/components/weather/CityTile.vue` |
 | 전역 상태 | `src/stores/weatherStore.js`, `src/stores/configStore.js` |
 | API 모듈 | `src/api/openWeather.js` |
+
 <br><br>
 ## 폴더 구조
 
@@ -72,6 +73,7 @@ npm run dev
 | `npm run preview` | 빌드 결과 미리보기 |
 | `npm run lint` | ESLint · Oxlint |
 | `npm run format` | Prettier |
+
 <br><br>
 ## 환경 변수
 
