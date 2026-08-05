@@ -222,7 +222,7 @@
   animation: wi-halo 3.4s ease-in-out infinite;
 }
 .weather-icon .s2-halo-b {
-  animation: wi-halo 3.4s ease-in-out 0.5s infinite;
+  animation: wi-halo 3.4s ease-in-out 0.5s infinite backwards;
 }
 
 /* S3 */
