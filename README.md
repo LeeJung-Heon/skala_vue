@@ -2,7 +2,7 @@
 
 OpenWeatherMap API를 연동한 Vue 3 날씨 대시보드
 검색·필터·상세 이동·단위 전환·도시 추가/삭제를 하나의 제품 UI로 구성
-
+<br><br>
 ## 기능
 
 - 도시 목록 대시보드 (현재 기온, 습도·풍속·강수, 시간대별 기온)
@@ -11,7 +11,7 @@ OpenWeatherMap API를 연동한 Vue 3 날씨 대시보드
 - ℃ / ℉ 전역 단위 전환 (Pinia)
 - 로딩·에러·재시도 UI
 - GitHub Pages 배포 (`base` + Hash History)
-
+<br><br>
 ## 기술 스택
 
 | 구분 | 사용 |
@@ -25,7 +25,7 @@ OpenWeatherMap API를 연동한 Vue 3 날씨 대시보드
 | Deploy | GitHub Pages Actions |
 
 > UI는 Element Plus 등 라이브러리 대신 커스텀 CSS로 구성
-
+<br><br>
 ## 과제 역할 ↔ 실제 파일 매핑
 
 | 과제에서 요구한 역할 | 실제 구현 |
@@ -36,7 +36,7 @@ OpenWeatherMap API를 연동한 Vue 3 날씨 대시보드
 | WeatherCard | `src/components/weather/CityTile.vue` |
 | 전역 상태 | `src/stores/weatherStore.js`, `src/stores/configStore.js` |
 | API 모듈 | `src/api/openWeather.js` |
-
+<br><br>
 ## 폴더 구조
 
 ```text
@@ -49,7 +49,7 @@ src/
   utils/            # API 매핑 · 기온 구간 · 도시 메타
   views/            # Home · Detail · About · Map · NotFound
 ```
-
+<br><br>
 ## 시작하기
 
 ```sh
@@ -62,7 +62,7 @@ npm run dev
 ```
 
 로컬 개발 서버는 `http://localhost:PORT_NUM` 에서 실행됩니다.
-
+<br><br>
 ## 스크립트
 
 | 명령 | 설명 |
@@ -72,7 +72,7 @@ npm run dev
 | `npm run preview` | 빌드 결과 미리보기 |
 | `npm run lint` | ESLint · Oxlint |
 | `npm run format` | Prettier |
-
+<br><br>
 ## 환경 변수
 
 | 변수 | 용도 |
@@ -81,7 +81,7 @@ npm run dev
 | `VITE_GOOGLE_MAPS_API_KEY` | 3D 지도 페이지용 (선택) |
 
 `.env`는 커밋하지 않습니다. GitHub Actions에서는 Secrets로 빌드 시 주입
-
+<br><br>
 ## 라우트
 
 | 경로 | 화면 |
@@ -95,7 +95,7 @@ npm run dev
 
 정적 호스팅에서도 경로가 깨지지 않도록 `createWebHashHistory()` 를 사용
 실제 URL 예: `https://<user>.github.io/skala_vue/#/weather`
-
+<br><br>
 ## 배포 (GitHub Pages)
 
 1. 저장소 Settings → Pages → Source를 **GitHub Actions** 로 설정
@@ -106,7 +106,7 @@ npm run dev
 
 빌드 시 `GITHUB_ACTIONS=true` 이면 Vite `base` 가 `/skala_vue/` 로 설정
 저장소/Pages 경로 이름과 `vite.config.js` 의 `base` 가 다르면 **흰 화면**이 나올 수 있음
-
+<br><br>
 ## 코드 리뷰(self)
 
 - **단일 책임:** 검색은 `CitySearchField`, 카드는 `CityTile`, 레이아웃·단위 전환은 `WeatherAppShell`, 데이터·API는 스토어와 뷰가 담당.
