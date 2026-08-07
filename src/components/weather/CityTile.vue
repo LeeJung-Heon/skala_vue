@@ -40,7 +40,26 @@ const comfortOf = (celsius) => {
   <article class="tile" :class="{ active }" @click="emit('select', city)">
     <header class="tile-head">
       <div>
-        <h3 class="tile-name">{{ city.name }}</h3>
+        <h3 class="tile-name">
+          <!-- 과제 확장 / 내 위치로 불러온 카드 표시 -->
+          <svg
+            v-if="city.myLocation"
+            class="tile-pin"
+            viewBox="0 0 24 24"
+            aria-label="내 위치"
+            role="img"
+          >
+            <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2" />
+            <circle cx="12" cy="12" r="2.6" fill="currentColor" />
+            <path
+              d="M12 2v3M12 19v3M2 12h3M19 12h3"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          {{ city.name }}
+        </h3>
         <p class="tile-region">{{ city.region }}</p>
       </div>
       <WeatherIcon class="tile-icon" :name="city.icon" :size="28" :label="city.status" />
@@ -108,12 +127,22 @@ const comfortOf = (celsius) => {
 }
 
 .tile-name {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   margin: 0;
   font-size: 15.5px;
   font-weight: 700;
   color: var(--w-text);
   border: 0;
   padding: 0;
+}
+
+.tile-pin {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  color: var(--w-accent);
 }
 
 .tile-region {

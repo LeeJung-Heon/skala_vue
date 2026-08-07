@@ -13,6 +13,7 @@ import axios from 'axios'
 
 const BASE = 'https://api.openweathermap.org'
 const GEO_URL = `${BASE}/geo/1.0/direct`
+const GEO_REVERSE_URL = `${BASE}/geo/1.0/reverse`
 const WEATHER_URL = `${BASE}/data/2.5/weather`
 const FORECAST_URL = `${BASE}/data/2.5/forecast`
 
@@ -53,6 +54,33 @@ export async function getCoordinates(cityName, { countryCode = '', limit = 1 } =
     state: location.state ?? '',
     localNames: location.local_names ?? {},
   }))
+}
+
+/**
+ * 과제 확장 / Reverse Geocoding API — 위도·경도 → 지역명
+ * 브라우저 Geolocation 좌표에 사람이 읽을 수 있는 이름을 붙이는 데 씁니다.
+ */
+export async function getReverseGeocoding(lat, lon) {
+  const { data } = await axios.get(GEO_REVERSE_URL, {
+    params: {
+      lat,
+      lon,
+      limit: 1,
+      appid: getApiKey(),
+    },
+  })
+
+  const hit = (data ?? [])[0]
+  if (!hit) return null
+
+  return {
+    name: hit.name,
+    lat: hit.lat ?? lat,
+    lon: hit.lon ?? lon,
+    country: hit.country,
+    state: hit.state ?? '',
+    localNames: hit.local_names ?? {},
+  }
 }
 
 /** 과제 — 날씨 데이터 연동 / Current Weather Data API */

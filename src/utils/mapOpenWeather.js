@@ -246,6 +246,7 @@ export function mapCityFromOpenWeather(meta, bundle) {
     lat: bundle.lat ?? meta.lat,
     lon: bundle.lon ?? meta.lon,
     custom: Boolean(meta.custom),
+    myLocation: Boolean(meta.myLocation),
     timezoneOffsetSec,
     icon: mapWeatherIcon(weather, wind),
     status: mapWeatherStatus(weather, wind),

@@ -3,10 +3,12 @@
  * 도시 검색·추가·삭제 등 API·상태 확장
  */
 import { defineStore } from 'pinia'
-import { fetchCityWeatherBundle, getCoordinates } from '@/api/openWeather'
+import { fetchCityWeatherBundle, getCoordinates, getReverseGeocoding } from '@/api/openWeather'
 import { weatherCityDirectory, findCityMeta } from '@/data/weatherCities'
 import { mapCityFromOpenWeather } from '@/utils/mapOpenWeather'
 import {
+  displayCityName,
+  displayRegion,
   expandSearchQueries,
   metaFromLocation,
   rankAndDedupeLocations,
@@ -15,6 +17,20 @@ import {
 
 const CUSTOM_STORAGE_KEY = 'skyline-weather-custom-cities'
 const REMOVED_STORAGE_KEY = 'skyline-weather-removed-cities'
+const MY_LOCATION_STORAGE_KEY = 'skyline-weather-my-location'
+
+/** 내 위치 도시는 고정 id 를 씁니다 (상세·지도 라우트에서 그대로 사용) */
+export const MY_LOCATION_ID = 'my_location'
+
+const loadJsonObject = (key) => {
+  try {
+    const raw = localStorage.getItem(key)
+    const parsed = raw ? JSON.parse(raw) : null
+    return parsed && typeof parsed === 'object' ? parsed : null
+  } catch {
+    return null
+  }
+}
 
 const loadJsonArray = (key) => {
   try {
@@ -51,6 +67,10 @@ export const useWeatherStore = defineStore('weather', {
     lastFetchedAt: null,
     adding: false,
     addError: null,
+    // 과제 확장 / 내 위치 — Geolocation + Reverse Geocoding
+    myLocationMeta: loadJsonObject(MY_LOCATION_STORAGE_KEY),
+    locating: false,
+    locateError: null,
   }),
 
   getters: {
@@ -62,10 +82,19 @@ export const useWeatherStore = defineStore('weather', {
     activeDirectory: (state) =>
       weatherCityDirectory.filter((meta) => !state.removedIds.includes(meta.id)),
     allMetas() {
-      return [...this.activeDirectory, ...this.customMetas]
+      // 내 위치는 항상 목록 맨 앞
+      return [
+        ...(this.myLocationMeta ? [this.myLocationMeta] : []),
+        ...this.activeDirectory,
+        ...this.customMetas,
+      ]
     },
-    resolveMeta: (state) => (id) =>
-      findCityMeta(id) ?? state.customMetas.find((meta) => meta.id === id) ?? null,
+    resolveMeta: (state) => (id) => {
+      if (id === MY_LOCATION_ID) return state.myLocationMeta
+      return findCityMeta(id) ?? state.customMetas.find((meta) => meta.id === id) ?? null
+    },
+    /** 내 위치 날씨가 이미 로드됐는지 */
+    myLocationCity: (state) => state.cities.find((city) => city.id === MY_LOCATION_ID) ?? null,
   },
 
   actions: {
@@ -201,6 +230,96 @@ export const useWeatherStore = defineStore('weather', {
       }
     },
 
+    /** 브라우저 Geolocation 좌표를 Promise 로 감쌉니다. */
+    getBrowserPosition() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error('이 브라우저는 위치 확인을 지원하지 않습니다.'))
+          return
+        }
+        navigator.geolocation.getCurrentPosition(
+          (position) =>
+            resolve({
+              lat: position.coords.latitude,
+              lon: position.coords.longitude,
+            }),
+          (error) =>
+            reject(
+              new Error(
+                error.code === error.PERMISSION_DENIED
+                  ? '위치 권한이 거부되었습니다. 브라우저 설정에서 허용해 주세요.'
+                  : '현재 위치를 확인하지 못했습니다.',
+              ),
+            ),
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
+        )
+      })
+    },
+
+    /**
+     * 과제 확장 / 내 위치 날씨
+     * Geolocation → Reverse Geocoding 으로 지역명을 붙이고 날씨를 불러옵니다.
+     */
+    async detectMyLocation({ select = true } = {}) {
+      if (this.locating) return null
+
+      this.locating = true
+      this.locateError = null
+
+      try {
+        const { lat, lon } = await this.getBrowserPosition()
+        const place = await getReverseGeocoding(lat, lon)
+
+        const meta = {
+          id: MY_LOCATION_ID,
+          // 역지오코딩이 실패해도 좌표만으로 날씨는 볼 수 있게 합니다.
+          name: place ? displayCityName(place) : '내 위치',
+          region: place ? displayRegion(place) : '현재 위치',
+          queryName: place?.name ?? '',
+          countryCode: place?.country ?? '',
+          lat,
+          lon,
+          myLocation: true,
+        }
+
+        const mapped = await this.fetchBundleForMeta(meta)
+
+        this.myLocationMeta = meta
+        try {
+          localStorage.setItem(MY_LOCATION_STORAGE_KEY, JSON.stringify(meta))
+        } catch {
+          // 저장 실패해도 이번 세션에서는 동작합니다
+        }
+
+        const index = this.cities.findIndex((city) => city.id === MY_LOCATION_ID)
+        if (index >= 0) this.cities[index] = mapped
+        else this.cities = [mapped, ...this.cities]
+
+        if (this.status === 'idle' || this.status === 'error') this.status = 'ready'
+        if (select) this.selectCity(MY_LOCATION_ID)
+
+        return mapped
+      } catch (error) {
+        console.error('내 위치 날씨 조회 실패:', error)
+        this.locateError =
+          error?.response?.data?.message || error?.message || '내 위치 날씨를 불러오지 못했습니다.'
+        return null
+      } finally {
+        this.locating = false
+      }
+    },
+
+    /** 저장해 둔 내 위치를 지웁니다. */
+    clearMyLocation() {
+      this.myLocationMeta = null
+      this.locateError = null
+      try {
+        localStorage.removeItem(MY_LOCATION_STORAGE_KEY)
+      } catch {
+        // ignore
+      }
+    },
+
     /** 기본 도시·추가 도시 모두 삭제 (삭제 목록은 localStorage 에 유지) */
     removeCity(id) {
       const existed = this.cities.some((city) => city.id === id)
@@ -209,6 +328,10 @@ export const useWeatherStore = defineStore('weather', {
       }
 
       this.cities = this.cities.filter((city) => city.id !== id)
+
+      if (id === MY_LOCATION_ID) {
+        this.clearMyLocation()
+      }
 
       if (this.customMetas.some((meta) => meta.id === id)) {
         this.customMetas = this.customMetas.filter((meta) => meta.id !== id)

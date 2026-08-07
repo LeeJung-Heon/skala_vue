@@ -21,6 +21,7 @@ import WeatherAppShell from '@/components/weather/WeatherAppShell.vue'
 import CitySearchField from '@/components/weather/CitySearchField.vue'
 import CityTile from '@/components/weather/CityTile.vue'
 import CityInsightCard from '@/components/weather/CityInsightCard.vue'
+import MyLocationTile from '@/components/weather/MyLocationTile.vue'
 import WeatherIcon from '@/components/weather/WeatherIcon.vue'
 import { useConfigStore } from '@/stores/configStore'
 import { useWeatherStore } from '@/stores/weatherStore'
@@ -35,8 +36,17 @@ const router = useRouter()
 const route = useRoute()
 const config = useConfigStore()
 const weatherStore = useWeatherStore()
-const { cities, status, error, isLoading, adding, addError, selectedCityId, selectedCity } =
-  storeToRefs(weatherStore)
+const {
+  cities,
+  status,
+  error,
+  isLoading,
+  adding,
+  addError,
+  selectedCityId,
+  selectedCity,
+  myLocationCity,
+} = storeToRefs(weatherStore)
 
 // — 날씨 (컴포지션) / 반응형 상태 · searchQuery
 const searchQuery = ref('')
@@ -117,6 +127,9 @@ const matchesQuery = (city, query) => {
 }
 
 // 날씨 (컴포지션) / computed — 검색어가 포함된 도시만 필터 (listedCities)
+// 과제 확장 / 내 위치를 아직 못 찾았고 검색 중이 아닐 때만 안내 카드를 노출
+const showMyLocationPrompt = computed(() => !myLocationCity.value && !searchQuery.value.trim())
+
 const listedCities = computed(() => {
   const query = searchQuery.value.trim()
   if (!query) return cities.value
@@ -328,7 +341,9 @@ watch(selectedCityId, (id, prevId) => {
           -->
         </header>
 
-        <div v-if="listedCities.length" class="city-grid">
+        <div v-if="listedCities.length || showMyLocationPrompt" class="city-grid">
+          <!-- 과제 확장 / 내 위치 날씨 카드 (위치를 찾으면 CityTile 로 대체됩니다) -->
+          <MyLocationTile v-if="showMyLocationPrompt" />
           <!--
              — 날씨 Mockup / 배열 렌더링 (v-for) · :key 에 id 바인딩
              — 날씨 (컴포넌트) / WeatherCard 역할 → CityTile (props · select · detail emits)
